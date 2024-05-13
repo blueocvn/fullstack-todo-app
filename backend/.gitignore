@@ -1,0 +1,26 @@
+
+### Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+app/test/
+### env file
+.env
+
+### docker data
+.docker-data/
+.docker-data-bk/
+
+### direnv
+.envrc
+
+### pyenv
+.python-version
+
+### tmp dir
+tmp/
+
+.idea/
+
+.venv
