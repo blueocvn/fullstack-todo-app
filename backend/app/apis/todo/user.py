@@ -7,7 +7,7 @@ from uuid import UUID
 
 from app.services.task import TaskService
 
-router = APIRouter(prefix="/task", tags=['Tasks'])
+router = APIRouter(prefix="/user", tags=['Tasks'])
 
 @router.get("", response_model=List[User])
 def get_all( db:Session = Depends(get_db)): 
