@@ -1,19 +1,21 @@
-import enum
+import uuid
 
 from app.core.database import Base
-from sqlalchemy import Column, Enum, ForeignKey, Integer, String
-
-
-class Status(enum.Enum):
-    pending = 1
-    processing = 2
-    complete = 3
+from sqlalchemy import (
+    Column,
+    ForeignKey,
+    String,
+)
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 
 class TasModel(Base):
     __tablename__ = "tasks"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = Column(String, nullable=False)
-    status = Column(Enum(Status))
-    teamMember_id = Column(ForeignKey("team_member.id", ondelete="CASCADE"))
+    status = Column(String, nullable=False, default="pending")
+    owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+
+    owner = relationship("UserModel", back_populates="tasks")

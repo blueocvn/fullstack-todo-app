@@ -1,4 +1,4 @@
-from app.apis import user_router
+from app.apis import todo_router, user_router
 from app.apis.todo import todo_router
 from app.core.config import settings
 from app.core.database import SessionLocal
@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 def create_application() -> FastAPI:
     application = FastAPI(title=settings.PROJECT_NAME)
     application.include_router(user_router)
+    app.include_router(todo_router)
     return application
 
 
@@ -21,9 +22,6 @@ app.add_middleware(
     allow_methods=[settings.CORS_METHODS],
     allow_headers=[settings.CORS_HEADERS],
 )
-
-
-app.include_router(todo_router)
 
 
 @app.middleware("http")
