@@ -1,5 +1,14 @@
+import LoginForm from "../../components/LoginForm";
+
 const Login = () => {
-  return <div>Login</div>;
+  const handleLogin = () => {
+    
+  }
+  return <div>
+    <LoginForm onLogin={handleLogin}/>
+  </div>;
 };
 
 export default Login;
+
+
