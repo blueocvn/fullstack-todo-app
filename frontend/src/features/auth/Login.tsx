@@ -1,12 +1,11 @@
 import LoginForm from "../../components/LoginForm";
 
 const Login = () => {
-  const handleLogin = () => {
-    
-  }
-  return <div>
-    <LoginForm onLogin={handleLogin}/>
-  </div>;
+
+  return (
+    <LoginForm/>
+  );
+
 };
 
 export default Login;
