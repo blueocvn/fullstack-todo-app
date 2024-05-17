@@ -9,3 +9,4 @@ class Task(Base):
     status = Column(Integer, nullable=False, unique=True)
     createAt = Column(DateTime, nullable=True)
     updateAt = Column(DateTime, nullable=True)
+    dueDate = Column(DateTime, nullable=True)
