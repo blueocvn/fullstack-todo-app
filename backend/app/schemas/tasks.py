@@ -9,3 +9,7 @@ class Task(BaseModel):
   user_id : int
   createAt : str
   updateAt : str
+
+class TaskResponse(BaseModel):
+  status : int 
+  data : list[Task]
