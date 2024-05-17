@@ -11,5 +11,5 @@ class Task(BaseModel):
   updateAt : str
 
 class TaskResponse(BaseModel):
-  status : str 
+  status : int 
   data : list[Task]
