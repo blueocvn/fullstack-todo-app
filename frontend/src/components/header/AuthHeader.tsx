@@ -17,7 +17,7 @@ const authHeaderLinks = [
 
 const AuthHeader = () => {
   return (
-    <header className="sticky top-0 left-0 py-4 border-b shadow-sm">
+    <header className="fixed top-0 left-0 py-4 border-b shadow-sm w-full">
       <div className="max-w-[1440px] mx-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

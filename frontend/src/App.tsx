@@ -7,6 +7,7 @@ import PrivateOutlet from './components/layouts/PrivateOutlet';
 
 const Register = lazy(() => import('./features/auth/Register'));
 const TaskList = lazy(() => import('./features/task/TaskList'));
+const Login = lazy(() => import('./features/auth/Login'));
 
 function App() {
   return (
@@ -15,6 +16,8 @@ function App() {
       <Routes>
         <Route path={ROUTE.ROOT} element={<AuthOutlet />}>
           <Route index element={<Register />} />
+          <Route path={ROUTE.AUTH.REGISTER} element={<Register />} index />
+          <Route path={ROUTE.AUTH.LOGIN} element={<Login />} />
         </Route>
         <Route path={'*'} element={<PrivateOutlet />}>
           <Route index path="task" element={<TaskList />} />
