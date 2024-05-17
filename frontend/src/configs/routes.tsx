@@ -7,8 +7,8 @@ export const ROUTE = {
   AUTH: {
     REGISTER: 'register',
     LOGIN: 'login',
-    FOGOTPASSWOLD: 'fogotPasswold',
-    CHANGEPASSWOLD: 'changePasswold'
+    FOGOTPASSWORD: 'fogotPassword',
+    CHANGEPASSWORD: 'changePassword'
   },
   TASK: {
     ROOT: 'tasks',
