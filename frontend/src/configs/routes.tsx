@@ -3,5 +3,6 @@ export const ROUTE = {
     auth: 'auth',
     register: 'register',
     login: 'login',
+    editUser: 'edituser',
   },
 };
