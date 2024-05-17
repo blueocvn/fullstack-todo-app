@@ -1,7 +1,23 @@
+import { TaskIcon } from '../components/common/Icons';
+import { AppRoute } from '../interfaces/route';
+
 export const ROUTE = {
+  ROOT: '',
+
   AUTH: {
-    auth: 'auth',
-    register: 'register',
-    login: 'login',
+    REGISTER: 'register',
+    LOGIN: 'login',
+  },
+
+  TASK: {
+    ROOT: 'tasks',
   },
 };
+
+export const AppRoutes: AppRoute[] = [
+  {
+    title: 'Task',
+    path: ROUTE.TASK.ROOT,
+    icons: TaskIcon,
+  },
+];
