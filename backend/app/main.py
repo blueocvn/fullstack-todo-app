@@ -8,7 +8,7 @@ import models
 def create_application():
     application  = FastAPI()    
     application.include_router(TaskRouter)
-    app.include_router(auth.router)
+    application.include_router(auth.router)
     return application
 
 app = create_application()
