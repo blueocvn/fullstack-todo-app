@@ -1,13 +1,19 @@
 import { Button, Card, Label, TextInput } from 'flowbite-react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
+import { useNavigate } from 'react-router-dom';
 
 export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleTogglePasswordVisiblity = () => {
     setShowPassword(showPassword ? false : true);
   };
+
+  const handleNavigateRegister = useCallback(() => {
+    navigate(`/register`);
+  }, [navigate]);
 
   return (
     <Card className="min-w-80">
@@ -40,7 +46,12 @@ export const LoginForm = () => {
         <Button type="submit">Login</Button>
         <div className="text-xs flex justify-center">
           <p className="mr-1">Do not have an account?</p>
-          <p className="underline decoration-green-900 text-green-900 hover:cursor-pointer">Register</p>
+          <p
+            className="underline decoration-green-900 text-green-900 hover:cursor-pointer"
+            onClick={handleNavigateRegister}
+          >
+            Register
+          </p>
         </div>
       </form>
     </Card>
