@@ -14,9 +14,9 @@ function App() {
     <>
       <ToastContainer hideProgressBar />
         <Routes>
-          <Route path={ROUTE.AUTH.auth} element={<AuthOutlet />}>
-            <Route path={ROUTE.AUTH.register} element={<Register />} index />
-            <Route path={ROUTE.AUTH.login} element={<Login />} />
+          <Route path={ROUTE.ROOT} element={<AuthOutlet />}>
+            <Route path={ROUTE.AUTH.REGISTER} element={<Register />} index />
+            <Route path={ROUTE.AUTH.LOGIN} element={<Login />} />
             <Route path={ROUTE.AUTH.editUser} element={<EditUser />} />
          </Route>
         <Route path={'*'} element={<PrivateOutlet />}>
