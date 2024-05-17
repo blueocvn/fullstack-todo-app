@@ -1,11 +1,22 @@
+from fastapi.middleware.cors import CORSMiddleware
+from app.api.task import task_router as TaskRouter
 from fastapi import FastAPI, Request, Response
 from auth import auth
 from core.database import engine, Base, SessionLocal
 import models
 
-app = FastAPI()
+def create_application():
+    application  = FastAPI()    
+    application.include_router(TaskRouter)
+    application.include_router(auth.router)
+    return application
 
-app.include_router(auth.router)
+app = create_application()
+
+app.add_middleware(
+    CORSMiddleware
+)
+
 
 @app.middleware("http")
 async def db_session_middleware(request: Request, call_next):
