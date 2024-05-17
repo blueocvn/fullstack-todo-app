@@ -1,5 +1,5 @@
 import ForgotPasswordform from "../../components/form/ForgotPasswordForm";
-const FogotPassword = () => {
+const ForgotPassword = () => {
 
   return (
     <ForgotPasswordform/>
@@ -7,4 +7,4 @@ const FogotPassword = () => {
 
 };
 
-export default FogotPassword;
+export default ForgotPassword;
