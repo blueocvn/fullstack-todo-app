@@ -1,14 +1,13 @@
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.task import task_router as TaskRouter
+from app.api.tasks import task_router as TaskRouter
 from fastapi import FastAPI, Request, Response
-from auth import auth
-from core.database import engine, Base, SessionLocal
-import models
+from app.api.auth import router as AuthRouter
+from app.core.database import engine, Base, SessionLocal
 
 def create_application():
     application  = FastAPI()    
     application.include_router(TaskRouter)
-    application.include_router(auth.router)
+    application.include_router(AuthRouter)
     return application
 
 app = create_application()
