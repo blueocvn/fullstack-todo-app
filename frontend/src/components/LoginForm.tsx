@@ -1,29 +1,95 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Card, Label, TextInput } from 'flowbite-react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
+import { useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
 
-export const LoginForm = () => {
+import { LoginModel } from '../types/Auth';
+
+const newLoginSchema = Yup.object().shape({
+  email: Yup.string().email().required('please enter email').max(30),
+  password: Yup.string().required('please enter password'),
+});
+
+interface Props {
+  onLoginFrame?: (data: LoginModel) => void;
+}
+
+export const LoginForm = (props: Props) => {
+  const { onLoginFrame = () => {} } = props;
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleTogglePasswordVisiblity = () => {
     setShowPassword(showPassword ? false : true);
   };
 
+  const handleNavigateRegister = useCallback(() => {
+    navigate(`/register`);
+  }, [navigate]);
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset,
+  } = useForm<LoginModel>({
+    resolver: yupResolver(newLoginSchema),
+  });
+
+  const handleChangeData = useCallback(
+    (data: LoginModel) => {
+      onLoginFrame({
+        ...data,
+      });
+      console.log(data);
+    },
+    [reset],
+  );
+
   return (
     <Card className="min-w-80">
-      <form className="flex flex-col gap-4">
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit(handleChangeData)}>
         <div>
           <div className="mb-2 block">
             <Label htmlFor="username" value="Your username" />
           </div>
-          <TextInput id="username" type="input" required />
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, value } }) => (
+              <div>
+                <TextInput
+                  value={value || ''}
+                  onChange={(e) => onChange(e.target.value)}
+                  color={errors?.email ? 'failure' : ''}
+                  helperText={errors.email ? errors?.email?.message : <></>}
+                />
+              </div>
+            )}
+          />
         </div>
         <div>
           <div className="mb-2 block">
             <Label htmlFor="password1" value="Your password" />
           </div>
           <div className="relative mb-3">
-            <TextInput id="password1" type={showPassword ? 'text' : 'password'} required />
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, value } }) => (
+                <div>
+                  <TextInput
+                    value={value || ''}
+                    onChange={(e) => onChange(e.target.value)}
+                    color={errors?.password ? 'failure' : ''}
+                    helperText={errors.password ? errors?.password?.message : <></>}
+                  />
+                </div>
+              )}
+            />
             {showPassword ? (
               <FaRegEyeSlash
                 onClick={handleTogglePasswordVisiblity}
@@ -40,7 +106,12 @@ export const LoginForm = () => {
         <Button type="submit">Login</Button>
         <div className="text-xs flex justify-center">
           <p className="mr-1">Do not have an account?</p>
-          <p className="underline decoration-green-900 text-green-900 hover:cursor-pointer">Register</p>
+          <p
+            className="underline decoration-green-900 text-green-900 hover:cursor-pointer"
+            onClick={handleNavigateRegister}
+          >
+            Register
+          </p>
         </div>
       </form>
     </Card>
