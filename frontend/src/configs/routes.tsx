@@ -7,11 +7,15 @@ export const ROUTE = {
   AUTH: {
     REGISTER: 'register',
     LOGIN: 'login',
-    editUser: 'edituser',
+    FOGOTPASSWOLD: 'fogotPasswold',
+    CHANGEPASSWOLD: 'changePasswold'
   },
   TASK: {
     ROOT: 'tasks',
   },
+  USER:{
+    PROFILE: 'profile',
+  }
 };
 
 export const AppRoutes: AppRoute[] = [

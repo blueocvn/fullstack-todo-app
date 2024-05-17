@@ -1,12 +1,12 @@
 import { Container, Row } from 'react-bootstrap'
 import { FloatingLabel, Button, Card } from "flowbite-react";
-const InputEmailform = () => {
+
+const ForgotPassword = () => {
     return (
         <Container>
             <Card className="max-w-m">
                 <Row>
-                    <h1>Email</h1>
-                    <FloatingLabel variant="outlined" label="Label" />
+                    <FloatingLabel variant="outlined" label="Email" />
                 </Row>
                 <Row>
                     <Button color="blue" pill>
@@ -17,5 +17,4 @@ const InputEmailform = () => {
         </Container>
     )
 }
-
-export default InputEmailform
+export default ForgotPassword
