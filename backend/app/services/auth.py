@@ -1,10 +1,9 @@
 from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
 from passlib.context import CryptContext
-from uuid import UUID
 import jwt
 
-from app.schemas.auth import Register
+from app.schemas.auth import Register, Login
 from app.models.user import UserModel
 from app.core.config import settings
 
@@ -37,4 +36,30 @@ class AuthService:
         db.refresh(db_user)
         return db_user
     
+    @staticmethod
+    def login(db:Session, payload:Login):
+        found_user = db.query(UserModel).filter(UserModel.email == payload.email).first()
+
+        if found_user is None:
+            return JSONResponse(content='account is invalid', status_code=404)
+
+        check_pwd = AuthService.verify_password(payload.password, found_user.password)
+        if check_pwd == False:
+            return JSONResponse(content='account is invalid', status_code=400)
+        
+        user_data = {
+            "id":  str(found_user.id),
+            "username": found_user.username,
+            "email": found_user.email
+        }
+
+        access_token = jwt.encode(payload=user_data, key=settings.ACCESS_TOKEN_KEY, algorithm="HS256")
+        refresh_token = jwt.encode(payload=user_data, key=settings.REFRESH_TOKEN_KEY, algorithm="HS256")
+
+        response_data = {
+            "access_token":access_token,
+            "refresh_token":refresh_token
+        }
+        
+        return response_data
     
