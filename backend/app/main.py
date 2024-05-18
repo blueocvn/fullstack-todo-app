@@ -1,11 +1,9 @@
-from fastapi import FastAPI , Depends , Request , Response
+from fastapi import FastAPI , Request , Response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import HTTPBearer
 
 from app.core.config import settings
 from app.core.database import SessionLocal
-from app.apis import todo_router
-
+from app.api import todo_router
 
 def create_application() -> FastAPI:
     application = FastAPI(title=settings.PROJECT_NAME)
