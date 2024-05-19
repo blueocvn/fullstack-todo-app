@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
+from uuid import UUID
 
 from app.schemas.task import CreateTask, UpdateTask
 from app.models.user import UserModel
@@ -52,5 +53,23 @@ class TaskService:
             db.commit()
             db.refresh(found_task)
             return found_task
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="Internal server error")
+        
+    @staticmethod
+    def delete(db: Session, task_id:UUID, user:dict):
+        try:
+            user_id = user.get('id')
+
+            found_task = db.query(TaskModel).filter(
+                    TaskModel.id == task_id,
+                    TaskModel.owner_id == user_id
+                ).first()
+            if found_task is None:
+                return JSONResponse(content="task not found", status_code=404)
+            
+            db.delete(found_task)
+            db.commit()
+            return JSONResponse(content="task has been deleted successfully", status_code=200)
         except Exception as e:
             raise HTTPException(status_code=500, detail="Internal server error")

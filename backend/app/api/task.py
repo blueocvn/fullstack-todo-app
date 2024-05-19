@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from uuid import UUID
 
 from app.schemas.task import CreateTask, UpdateTask
 from app.core.database import get_db
@@ -17,3 +18,7 @@ def create(payload:CreateTask, db:Session = Depends(get_db), user:dict = Depends
 @router.patch("")
 def update(payload:UpdateTask, db:Session = Depends(get_db), user:dict = Depends(jwtBearer)): 
     return TaskService.update(db, payload, user)
+
+@router.delete("")
+def delete(task_id:UUID, db:Session = Depends(get_db), user:dict = Depends(jwtBearer)): 
+    return TaskService.delete(db, task_id, user)
