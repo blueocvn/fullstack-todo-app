@@ -1,3 +1,4 @@
+import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
@@ -10,7 +11,16 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <App />
+        <SnackbarProvider
+          maxSnack={3}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          autoHideDuration={2000}
+        >
+          <App />
+        </SnackbarProvider>
       </BrowserRouter>
     </Provider>
   </React.StrictMode>,
