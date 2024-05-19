@@ -1,9 +1,10 @@
 from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
+from fastapi import HTTPException
 from passlib.context import CryptContext
 import jwt
 
-from app.schemas.auth import Register, Login
+from app.schemas.auth import Register, Login, ChangePassword
 from app.models.user import UserModel
 from app.core.config import settings
 
@@ -62,4 +63,28 @@ class AuthService:
         }
         
         return response_data
+    
+    @staticmethod
+    def change_password(db:Session, payload:ChangePassword, user:dict):
+        try:
+            user_id = user.get('id')
+
+            found_user = db.query(UserModel).filter(UserModel.id == user_id).first()
+            if found_user is None:
+                return JSONResponse(content="user not found", status_code=404)
+            
+            check_pwd = AuthService.verify_password(payload.old_password, found_user.password)
+            if check_pwd == False:
+                return JSONResponse(content='password is invalid', status_code=400)
+            
+            new_pwd = AuthService.hash_password(payload.new_password)
+
+            found_user.password = new_pwd
+            db.commit()
+            db.refresh(found_user)
+
+            return JSONResponse(content='password has been changed successfully', status_code=200)
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail='Internal server error')
     

@@ -3,10 +3,11 @@ from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from uuid import UUID
 
-from app.schemas.task import CreateTask, UpdateTask
+from app.schemas.task import CreateTask, UpdateTask, ChangeTaskStatus
 from app.models.user import UserModel
 from app.models.task import TaskModel
 from app.core.config import settings
+from app.utils.enums import TaskStatus
 
 class TaskService:
     @staticmethod
@@ -16,10 +17,31 @@ class TaskService:
 
             tasks = db.query(TaskModel).filter(
                     TaskModel.owner_id == user_id,
-                    TaskModel.assignee_id == user_id
+                    TaskModel.assignee_id == user_id,
+                    TaskModel.team_id == None
                 ).all()
             
             return tasks
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail="Internal server error")
+    
+    @staticmethod
+    def get_one_task(db: Session, task_id:UUID, user:dict):
+        try:
+            user_id = user.get('id')
+
+            found_task = db.query(TaskModel).filter(
+                    TaskModel.id == task_id,
+                    TaskModel.owner_id == user_id,
+                    TaskModel.assignee_id == user_id,
+                    TaskModel.team_id == None
+                ).first()
+            
+            if found_task is None:
+                return JSONResponse(content="task not found", status_code=404)
+            
+            return found_task
         except Exception as e:
             db.rollback()
             raise HTTPException(status_code=500, detail="Internal server error")
@@ -49,12 +71,12 @@ class TaskService:
             raise HTTPException(status_code=500, detail="Internal server error")
     
     @staticmethod
-    def update(db: Session, payload:UpdateTask, user:dict):
+    def update(db: Session, task_id:UUID, payload:UpdateTask, user:dict):
         try:
             user_id = user.get('id')
 
             found_task = db.query(TaskModel).filter(
-                    TaskModel.id == payload.id,
+                    TaskModel.id == task_id,
                     TaskModel.owner_id == user_id
                 ).first()
             if found_task is None:
@@ -63,6 +85,26 @@ class TaskService:
             update_data = payload.dict(exclude_unset=True)
             for key, value in update_data.items():
                 setattr(found_task, key, value)
+            
+            db.commit()
+            db.refresh(found_task)
+            return found_task
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="Internal server error")
+        
+    @staticmethod
+    def change_task_status(db: Session, task_id:str, payload:ChangeTaskStatus, user:dict):
+        try:
+            user_id = user.get('id')
+
+            found_task = db.query(TaskModel).filter(
+                    TaskModel.id == task_id,
+                    TaskModel.owner_id == user_id
+                ).first()
+            if found_task is None:
+                return JSONResponse(content="task not found", status_code=404)
+            
+            found_task.status = payload.status
             
             db.commit()
             db.refresh(found_task)
