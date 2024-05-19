@@ -1,5 +1,4 @@
-from app.apis import todo_router, user_router
-from app.apis.todo import todo_router
+from app.api import todo_router
 from app.core.config import settings
 from app.core.database import SessionLocal
 from fastapi import FastAPI, Request, Response
@@ -8,7 +7,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 def create_application() -> FastAPI:
     application = FastAPI(title=settings.PROJECT_NAME)
-    application.include_router(user_router)
     app.include_router(todo_router)
     return application
 

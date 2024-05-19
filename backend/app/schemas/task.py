@@ -1,14 +1,7 @@
 from pydantic import BaseModel
-
+from typing import Optional
 from uuid import UUID
-from enum import Enum
 
-class TaskStatus(str, Enum):
-    pending = "pending"
-    processing = "processing"
-    complete = "complete"
-
-class Task(BaseModel):
-    id: UUID
+class CreateTask(BaseModel):
     title: str
-    status: TaskStatus = TaskStatus.pending
+    team_id: Optional[UUID] = None
