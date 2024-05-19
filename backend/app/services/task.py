@@ -10,6 +10,21 @@ from app.core.config import settings
 
 class TaskService:
     @staticmethod
+    def get_all_tasks_by_user(db: Session, user:dict):
+        try:
+            user_id = user.get('id')
+
+            tasks = db.query(TaskModel).filter(
+                    TaskModel.owner_id == user_id,
+                    TaskModel.assignee_id == user_id
+                ).all()
+            
+            return tasks
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail="Internal server error")
+
+    @staticmethod
     def create(db: Session, payload:CreateTask, user:dict):
         try:
             user_id = user.get('id')
@@ -30,7 +45,6 @@ class TaskService:
             db.refresh(new_task)
             return new_task
         except Exception as e:
-            print("11111: ", e)
             db.rollback()
             raise HTTPException(status_code=500, detail="Internal server error")
     

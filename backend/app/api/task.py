@@ -11,6 +11,10 @@ router = APIRouter(prefix="/tasks", tags=['Tasks'])
 
 jwtBearer = JWTBearer()
 
+@router.get("")
+def get_all_tasks_by_user(db:Session = Depends(get_db), user:dict = Depends(jwtBearer)): 
+    return TaskService.get_all_tasks_by_user(db, user)
+
 @router.post("")
 def create(payload:CreateTask, db:Session = Depends(get_db), user:dict = Depends(jwtBearer)): 
     return TaskService.create(db, payload, user)
