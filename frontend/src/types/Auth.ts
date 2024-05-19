@@ -19,3 +19,8 @@ export interface LoginResponse {
   access_token: string;
   refresh_token: string;
 }
+
+export interface ResetPasswordModel {
+  old_password: string;
+  new_password: string;
+}
