@@ -16,10 +16,31 @@ class TaskService:
 
             tasks = db.query(TaskModel).filter(
                     TaskModel.owner_id == user_id,
-                    TaskModel.assignee_id == user_id
+                    TaskModel.assignee_id == user_id,
+                    TaskModel.team_id == None
                 ).all()
             
             return tasks
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail="Internal server error")
+    
+    @staticmethod
+    def get_one_task(db: Session, task_id:UUID, user:dict):
+        try:
+            user_id = user.get('id')
+
+            found_task = db.query(TaskModel).filter(
+                    TaskModel.id == task_id,
+                    TaskModel.owner_id == user_id,
+                    TaskModel.assignee_id == user_id,
+                    TaskModel.team_id == None
+                ).first()
+            
+            if found_task is None:
+                return JSONResponse(content="task not found", status_code=404)
+            
+            return found_task
         except Exception as e:
             db.rollback()
             raise HTTPException(status_code=500, detail="Internal server error")

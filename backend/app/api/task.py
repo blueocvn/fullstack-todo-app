@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from uuid import UUID
+from typing import List
 
-from app.schemas.task import CreateTask, UpdateTask
+from app.schemas.task import UserTask, CreateTask, UpdateTask
 from app.core.database import get_db
 from app.middlewares.auth_middleware import JWTBearer
 from app.services.task import TaskService
@@ -11,9 +12,13 @@ router = APIRouter(prefix="/tasks", tags=['Tasks'])
 
 jwtBearer = JWTBearer()
 
-@router.get("")
+@router.get("", response_model=List[UserTask])
 def get_all_tasks_by_user(db:Session = Depends(get_db), user:dict = Depends(jwtBearer)): 
     return TaskService.get_all_tasks_by_user(db, user)
+
+@router.get("/{task_id}", response_model=UserTask)
+def get_one_task(task_id:UUID, db:Session = Depends(get_db), user:dict = Depends(jwtBearer)): 
+    return TaskService.get_one_task(db, task_id, user)
 
 @router.post("")
 def create(payload:CreateTask, db:Session = Depends(get_db), user:dict = Depends(jwtBearer)): 
