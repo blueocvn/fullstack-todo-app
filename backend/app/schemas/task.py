@@ -2,6 +2,8 @@ from pydantic import BaseModel
 from typing import Optional
 from uuid import UUID
 
+from app.utils.enums import TaskStatus
+
 class UserTask(BaseModel):
     id:UUID
     title:str
@@ -12,5 +14,7 @@ class CreateTask(BaseModel):
     team_id: Optional[UUID] = None
 
 class UpdateTask(BaseModel):
-    id:UUID
     title: Optional[str] = None
+
+class ChangeTaskStatus(BaseModel):
+    status: TaskStatus
