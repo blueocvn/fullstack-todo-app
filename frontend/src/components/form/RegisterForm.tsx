@@ -27,8 +27,8 @@ export const RegisterForm = (props: Props) => {
     setShowPassword(!showPassword);
   };
 
-  const handleNavigateRegister = useCallback(() => {
-    navigate(`/register`);
+  const handleNavigateLogin = useCallback(() => {
+    navigate(`/`);
   }, [navigate]);
 
   const {
@@ -54,7 +54,7 @@ export const RegisterForm = (props: Props) => {
       <form className="flex flex-col gap-4" onSubmit={handleSubmit(handleChangeData)}>
         <div>
           <div className="mb-2 block">
-            <Label htmlFor="username" value="Your email" />
+            <Label htmlFor="email" value="Your email" />
           </div>
           <Controller
             control={control}
@@ -134,10 +134,10 @@ export const RegisterForm = (props: Props) => {
           Register
         </Button>
         <div className="text-xs flex justify-center">
-          <p className="mr-1">Do not have an account?</p>
+          <p className="mr-1">Do you already have an account?</p>
           <p
             className="underline decoration-green-900 text-green-900 hover:cursor-pointer"
-            onClick={handleNavigateRegister}
+            onClick={handleNavigateLogin}
           >
             Login
           </p>
