@@ -3,6 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { LoginModel, LoginResponse, RegisterModel, RegisterResponse, ResetPasswordModel } from '../../types/Auth';
 import { GetAllTaskResponse } from '../../types/Task';
 import { getTokens } from '../../utils/storage';
+import { CreateTeamModel, TeamModel } from '../../types/Team';
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
@@ -32,7 +33,18 @@ export const api = createApi({
     getAllTaskByOwner: builder.query<GetAllTaskResponse[], void>({
       query: () => 'api/tasks',
     }),
+
+    // team
+    createNewTeam: builder.mutation<TeamModel[], CreateTeamModel>({
+      query: (body) => ({ method: 'POST', url: 'api/teams', body }),
+    }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation, useResetPasswordMutation, useGetAllTaskByOwnerQuery } = api;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useResetPasswordMutation,
+  useGetAllTaskByOwnerQuery,
+  useCreateNewTeamMutation
+} = api;

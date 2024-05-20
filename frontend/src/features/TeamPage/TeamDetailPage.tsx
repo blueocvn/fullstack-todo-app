@@ -1,15 +1,20 @@
 import {
+  Button,
+  Label,
   ListGroup,
   ListGroupItem,
+  Modal,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeadCell,
   TableRow,
+  TextInput,
 } from 'flowbite-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { E_Task_Status } from '../../types/enums';
+import { useState } from 'react';
 
 const data = [
   { task: 'task 1', assignee: 'Lộc Đào', status: 'pending' },
@@ -20,6 +25,8 @@ const data = [
 export const TeamDetailPage = () => {
   const params = useParams();
   const navigate = useNavigate();
+
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   const { teamId } = params;
 
@@ -36,6 +43,35 @@ export const TeamDetailPage = () => {
       <div className="col-span-7 text-xl flex justify-center gap-3">
         <span>Leader:</span>
         <span className="font-bold">Hoàng Phan</span>
+      </div>
+      <div className="col-span-3 text-xl text-center">
+        <Button className="w-full" onClick={() => setOpenModal(true)}>
+          Add member
+        </Button>
+        <Modal show={openModal} onClose={() => setOpenModal(false)}>
+          <Modal.Header>Add new team's member</Modal.Header>
+          <Modal.Body>
+            <div className="w-full flex justify-center">
+              <form className="w-full flex max-w-md flex-col gap-4">
+                <div>
+                  <div className="mb-2 block">
+                    <Label htmlFor="member" value="Team's member" />
+                  </div>
+                  <TextInput id="member" type="text" placeholder="Nguyen Van A" required />
+                </div>
+
+                <div className="flex justify-between gap-5">
+                  <Button className="w-1/2" type="submit">
+                    Submit
+                  </Button>
+                  <Button className="w-1/2" color="blue" onClick={() => setOpenModal(false)}>
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </Modal.Body>
+        </Modal>
       </div>
 
       <div className="col-span-7">
