@@ -3,7 +3,9 @@ import flowbite from 'flowbite-react/tailwind';
 export default {
   content: ['./src/**/*.{js,jsx,ts,tsx}', flowbite.content()],
   theme: {
-    extend: {},
+    extend: {
+      border: '#ccc'
+    },
   },
   plugins: [flowbite.plugin()],
 };
