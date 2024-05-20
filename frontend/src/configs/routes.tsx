@@ -8,14 +8,17 @@ export const ROUTE = {
     REGISTER: 'register',
     LOGIN: 'login',
     FOGOTPASSWORD: 'fogotPassword',
-    CHANGEPASSWORD: 'changePassword'
+    CHANGEPASSWORD: 'changePassword',
   },
+
   TASK: {
-    ROOT: 'tasks',
+    ROOT: 'task',
+    CREATE: 'create',
   },
-  USER:{
+
+  USER: {
     PROFILE: 'profile',
-  }
+  },
 };
 
 export const AppRoutes: AppRoute[] = [
