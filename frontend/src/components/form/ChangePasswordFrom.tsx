@@ -20,6 +20,7 @@ const ChangePasswordForm = () => {
       </div>
       <Button type="submit">Submit</Button>
     </form>
+
     )
 }
 

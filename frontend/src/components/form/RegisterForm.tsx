@@ -34,7 +34,7 @@ const RegisterForm = ({ onRegister } : RegisterFormProps) => {
   };
 
   return (
-    <>
+    <div className="flex items-center justify-center h-screen">
       <Card className="w-[400px]">
         <form className="flex flex-col max-w-md gap-4" onSubmit={handleSubmit(onSubmit)}>
           <h3 className="text-xl text-center">Đăng ký</h3>
@@ -62,7 +62,7 @@ const RegisterForm = ({ onRegister } : RegisterFormProps) => {
               autoComplete="off"
               placeholder="Email"
               {...register('email')}
-              className={errors.email ? ':ring-red-500' : 'ring-cyan-500'}
+              color={errors.email ? 'failure' : ''}
             />
             <p className="text-red-500">{errors.email?.message}</p>
           </div>
@@ -70,14 +70,24 @@ const RegisterForm = ({ onRegister } : RegisterFormProps) => {
             <div className="block mb-2">
               <Label htmlFor="password" value="Mật khẩu" />
             </div>
-            <TextInput type="password" placeholder="Password" {...register('password')} />
+            <TextInput
+              type="password"
+              placeholder="Password"
+              {...register('password')}
+              color={errors.password ? 'failure' : ''}
+            />
             <p className="text-red-500">{errors.password?.message}</p>
           </div>
           <div>
             <div className="block mb-2">
               <Label htmlFor="confirmPassword" value="Nhập lại mật khẩu" />
             </div>
-            <TextInput type="password" placeholder="Nhập lại mật khẩu" {...register('confirmPassword')} />
+            <TextInput
+              type="password"
+              placeholder="Nhập lại mật khẩu"
+              {...register('confirmPassword')}
+              color={errors.confirmPassword ? 'failure' : ''}
+            />
             <p className="text-red-500">{errors.confirmPassword?.message}</p>
           </div>
           <Button type="submit" className="bg-blue-500">
@@ -85,7 +95,7 @@ const RegisterForm = ({ onRegister } : RegisterFormProps) => {
           </Button>
         </form>
       </Card>
-    </>
+    </div>
   );
 };
 

@@ -1,9 +1,23 @@
 import { Avatar, Navbar } from 'flowbite-react';
 import { NavLink } from 'react-router-dom';
 import logo from './../../assets/Logo.png';
+import axios from 'axios'
+import Cookies from 'js-cookie'
+import { useEffect, useState } from 'react';
 
 const Header = () => {
+    const token = Cookies.get('token');
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    const [data, setData] = useState();       
     
+    useEffect(() => {
+        axios.get('/accounts/me',config)
+        .then((res) => {
+            setData(res.data);
+        }) 
+    }, [])
 
     return (
         <header>
@@ -14,7 +28,7 @@ const Header = () => {
                 </Navbar.Brand>
                 <div className="flex items-center gap-4">
                     <Avatar rounded />
-                    <p>Lê Minh Khang</p>
+                    <p>{data && data['user']['name']}</p>
                 </div>
             </Navbar>
         </header>
