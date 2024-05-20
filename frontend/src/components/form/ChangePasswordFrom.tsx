@@ -5,11 +5,11 @@ const ChangePasswordForm = () => {
         <Container>
             <Card className="max-w-m">
                 <Row>
-                    <h1>Nhập Mật Khẩu Mới</h1>
+                    <h1 className='mb-4'>Nhập Mật Khẩu Mới</h1>
                     <FloatingLabel variant="outlined" label="Password" />
                 </Row>
                 <Row>
-                    <h1>Nhập Lại Mật Khẩu</h1>
+                    <h1 className='mb-4'>Nhập Lại Mật Khẩu</h1>
                     <FloatingLabel variant="outlined" label="Re-Password" />
                 </Row>
                 <Row>

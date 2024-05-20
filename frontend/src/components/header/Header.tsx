@@ -10,17 +10,13 @@ const Header = () => {
     const config = {
         headers: { Authorization: `Bearer ${token}` }
     };
-    const [data, setData] = useState();
-
-    async function getUserData(){
-        await axios.get('/accounts/me',config)
-        .then((res) => {
-            setData(res.data);
-        })        
-    }
+    const [data, setData] = useState();       
     
     useEffect(() => {
-        getUserData();
+        axios.get('/accounts/me',config)
+        .then((res) => {
+            setData(res.data);
+        }) 
     }, [])
 
     return (
