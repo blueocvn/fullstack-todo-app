@@ -70,7 +70,7 @@ const EditUserProfile: React.FC = () => {
             })
             .then((res) => {
                 console.log('User updated successfully:', res.data);
-                setError(null);
+                setError('User updated successfully');
             })
             .catch((error) => {
                 if (error.response) {
