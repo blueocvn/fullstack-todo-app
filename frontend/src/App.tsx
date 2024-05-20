@@ -3,6 +3,8 @@ import { ToastContainer } from 'react-toastify';
 import { ROUTE } from './configs/routes';
 import { lazy } from 'react';
 import PrivateOutlet from './components/layouts/PrivateOutlet';
+import axios from 'axios';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const Register = lazy(() => import('./features/auth/Register'));
 const TaskList = lazy(() => import('./features/task/TaskList'));
@@ -14,6 +16,7 @@ const ChangePassword = lazy(() => import('./features/auth/ChangePassword'));
 const NotFound = lazy(() => import('./components/NotFound'));
 
 function App() {
+
   return (
     <>
       <ToastContainer hideProgressBar />
@@ -22,7 +25,7 @@ function App() {
         <Route path={ROUTE.AUTH.LOGIN} element={<Login />} />
         <Route path={ROUTE.AUTH.FOGOTPASSWORD} element={<ForgotPassword />} />
         <Route path={ROUTE.AUTH.CHANGEPASSWORD} element={<ChangePassword />} />
-        <Route path={ROUTE.ROOT} element={<PrivateOutlet />}>
+        <Route path={ROUTE.ROOT} element={<ProtectedRoute><PrivateOutlet /></ProtectedRoute>}>
           <Route index element={<TaskList />} />
           <Route path={ROUTE.TASK.CREATE} element={<TaskAdd />} />
           <Route path={ROUTE.USER.PROFILE} element={<Profile />} />
@@ -31,6 +34,5 @@ function App() {
       </Routes>
     </>
   );
-}
 
 export default App;

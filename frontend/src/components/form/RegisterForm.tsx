@@ -4,12 +4,13 @@ import { RegisterFormValues } from '../../interfaces/form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-// type RegisterFormProps = {
-//   onRegister?: () => void;
-// };
+interface RegisterFormProps {
+  onRegister: (data: RegisterFormValues) => void;
+};
 
 const registerSchema = yup
   .object({
+    name: yup.string().required("Vui lòng nhập tên của bạn"),
     email: yup.string().required('Vui lòng nhập email').email('Vui lòng nhập đúng định dạng email'),
     password: yup.string().required('Vui lòng nhập mật khẩu'),
     confirmPassword: yup
@@ -19,7 +20,7 @@ const registerSchema = yup
   })
   .required();
 
-const RegisterForm = () => {
+const RegisterForm = ({ onRegister } : RegisterFormProps) => {
   const {
     register,
     handleSubmit,
@@ -29,7 +30,7 @@ const RegisterForm = () => {
   });
 
   const onSubmit: SubmitHandler<RegisterFormValues> = (data) => {
-    console.log(data);
+    onRegister(data)
   };
 
   return (
@@ -37,6 +38,19 @@ const RegisterForm = () => {
       <Card className="w-[400px]">
         <form className="flex flex-col max-w-md gap-4" onSubmit={handleSubmit(onSubmit)}>
           <h3 className="text-xl text-center">Đăng ký</h3>
+          <div>
+            <div className="block mb-2">
+              <Label htmlFor="name1" value="Tên của bạn là"/>
+            </div>
+            <TextInput
+              type="text"
+              autoComplete="off"
+              placeholder="Tên của bạn"
+              {...register('name')}
+              className={errors.name ? ':ring-red-500' : 'ring-cyan-500'}
+            />
+            <p className="text-red-500">{errors.name?.message}</p>
+          </div>
           <div>
             <div className="block mb-2">
               <Label htmlFor="email1" value="Email">

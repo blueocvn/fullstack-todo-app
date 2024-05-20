@@ -29,15 +29,13 @@ def get_user(db: Session, user_id: int):
 def register(account: AccountCreate, db: Session = Depends(get_db)):
     db_account = get_account_by_email(db, account.email)
     if db_account:
-        raise HTTPException(
+        return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered"
+            content={"message": "Email already registered"}
         )
     
     user = User(
-        name=account.user.name,
-        createAt=datetime.utcnow(),
-        updateAt=datetime.utcnow()
+        name=account.user.name
     )
     db.add(user)
     db.commit()
@@ -89,3 +87,11 @@ async def read_accounts_me(token: str = Depends(oauth2_scheme), db: Session = De
         raise credentials_exception
     user = get_user(db, account.user_id)
     return {"id": account.id, "email": account.email, "user": user}
+
+@router.get("/accounts/test", response_model=AccountResponse)
+async def read_accounts_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
