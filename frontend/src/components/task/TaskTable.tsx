@@ -1,9 +1,12 @@
 import { Badge, Button, Card, Table } from 'flowbite-react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 const TaskTable = () => {
   return (
     <Card>
+      <Link to={'/create'}>
+        <Button className="w-fit">Tạo task</Button>
+      </Link>
       <Table striped>
         <Table.Head>
           <Table.HeadCell>Tên</Table.HeadCell>

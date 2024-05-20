@@ -6,9 +6,11 @@ const PrivateOutlet = () => {
   return (
     <main>
       <Header />
-      <div className="flex">
+      <div className="flex gap-5">
         <AppSideBar />
-        <Outlet />
+        <div className="flex-1 pt-5">
+          <Outlet />
+        </div>
       </div>
     </main>
   );
