@@ -15,6 +15,12 @@ SECRET_KEY = "your_secret_key"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
+credentials_exception = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Could not validate credentials",
+    headers={"WWW-Authenticate": "Bearer"},
+)
+
 router = APIRouter()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -50,6 +56,8 @@ def register(account: AccountCreate, db: Session = Depends(get_db)):
 @router.post("/token", response_model=Token)
 def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
     account = AuthServices.get_account_by_email(db, form_data.username)
+    if account is None:
+        raise credentials_exception
     if not account or not AuthServices.verify_password(form_data.password, account.password):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -75,6 +83,8 @@ def change_password(
 ):
     token_data = AuthServices.decode_jwt(token)
     account = AuthServices.get_account_by_email(db, email=token_data.email)
+    if account is None:
+        raise credentials_exception
 
     if not AuthServices.verify_password(password_change.current_password, account.password):
         raise HTTPException(
