@@ -1,7 +1,7 @@
+import { HomePage } from '../HomePage';
 import { withAppHeader } from '../../components/layouts/hocs';
 import { getTokens } from '../../utils/storage';
 import { Login } from './Login';
-import { HomePage } from '../../components/HomePage';
 
 const tokens = getTokens();
 
