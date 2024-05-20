@@ -24,7 +24,7 @@ function App() {
                     <Route path={ROUTE.AUTH.REGISTER} element={<Register />} index />
                     <Route path={ROUTE.AUTH.LOGIN} element={<Login />} />
                     <Route path={ROUTE.AUTH.FOGOTPASSWORD} element={<ForgotPassword />} />
-                    <Route path={ROUTE.AUTH.CHANGEPASSWORD} element={<ChangePassword />} />
+                    <Route path={ROUTE.AUTH.CHANGEPASSWORD} element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
                     <Route path={ROUTE.USER.PROFILE} element={<Profile  />} />
                 </Route>
                 <Route path={'*'} element={<ProtectedRoute><PrivateOutlet /></ProtectedRoute>}>

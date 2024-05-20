@@ -1,9 +1,10 @@
+from typing import Optional
 from pydantic import BaseModel
 
 class Task(BaseModel):
   id : int
   name : str
-  status : str
+  status : int
   description : str
   team_id : int
   user_id : int
@@ -13,3 +14,10 @@ class Task(BaseModel):
 class TaskResponse(BaseModel):
   status : int 
   data : list[Task]
+
+class TaskCreate(BaseModel):
+  name : str
+  status : str = 0
+  description : Optional[str] = None
+  team_id : int
+  user_id : Optional[int] = None
