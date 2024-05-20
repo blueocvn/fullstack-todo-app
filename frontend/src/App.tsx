@@ -35,6 +35,6 @@ function App() {
   );
     axios.defaults.baseURL = 'http://localhost:8000';
     axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-
+}
 
 export default App;
