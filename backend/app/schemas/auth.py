@@ -17,8 +17,10 @@ class AccountLogin(BaseModel):
 class UserResponse(BaseModel):
     id: int
     name: str
-    createAt: Optional[datetime] = None
-    updateAt: Optional[datetime] = None
+    dob: Optional[datetime] = None
+    gender: Optional[bool] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
 
     class Config:
         orm_mode = True

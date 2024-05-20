@@ -35,7 +35,7 @@ def register(account: AccountCreate, db: Session = Depends(get_db)):
         )
     
     user = User(
-        name=account.user.name,
+        name=account.user.name
     )
     db.add(user)
     db.commit()
