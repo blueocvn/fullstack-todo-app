@@ -6,12 +6,12 @@ const authHeaderLinks = [
   {
     id: 1,
     label: 'Đăng ký',
-    path: ROUTE.AUTH.register,
+    path: ROUTE.AUTH.REGISTER,
   },
   {
     id: 2,
     label: 'Đăng nhập',
-    path: ROUTE.AUTH.login,
+    path: ROUTE.AUTH.LOGIN,
   },
 ];
 
