@@ -3,3 +3,7 @@ export interface GetAllTaskResponse {
   title: string;
   status: string;
 }
+
+export interface TaskModel {
+  title: string;
+}
