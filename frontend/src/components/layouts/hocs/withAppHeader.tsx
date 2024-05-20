@@ -6,7 +6,9 @@ const withAppHeader = (WrappedComponent: React.ComponentType) => {
     return (
       <>
         <AppHeader />
-        <WrappedComponent {...props} />
+        <div className="w-3/5 mx-auto mt-5">
+          <WrappedComponent {...props} />
+        </div>
       </>
     );
   };

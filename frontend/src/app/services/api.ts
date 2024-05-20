@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { LoginModel, LoginResponse, RegisterModel, RegisterResponse, ResetPasswordModel } from '../../types/Auth';
+import { GetAllTaskResponse } from '../../types/Task';
 import { getTokens } from '../../utils/storage';
 
 export const api = createApi({
@@ -27,7 +28,11 @@ export const api = createApi({
     resetPassword: builder.mutation<{ code: string }, ResetPasswordModel>({
       query: (body) => ({ method: 'PATCH', url: 'api/reset-password', body }),
     }),
+
+    getAllTaskByOwner: builder.query<GetAllTaskResponse[], void>({
+      query: () => 'api/tasks',
+    }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation, useResetPasswordMutation } = api;
+export const { useRegisterMutation, useLoginMutation, useResetPasswordMutation, useGetAllTaskByOwnerQuery } = api;
