@@ -42,8 +42,6 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 
 def get_account_by_email(db: Session, email: str):
     account = db.query(Account).filter(Account.email == email).first()
-    if account is None:
-        raise credentials_exception
     return account
 
 def decode_jwt(token: str = Depends(oauth2_scheme)):

@@ -16,7 +16,9 @@ const ChangePassword = lazy(() => import('./features/auth/ChangePassword'));
 const NotFound = lazy(() => import('./components/NotFound'));
 
 function App() {
-  return (
+    axios.defaults.baseURL = 'http://localhost:8000';
+    axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+    return (
     <>
       <ToastContainer hideProgressBar />
       <Routes>
@@ -33,8 +35,6 @@ function App() {
       </Routes>
     </>
   );
-    axios.defaults.baseURL = 'http://localhost:8000';
-    axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 }
 
 export default App;
