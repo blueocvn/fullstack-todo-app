@@ -25,10 +25,10 @@ function App() {
                     <Route path={ROUTE.AUTH.LOGIN} element={<Login />} />
                     <Route path={ROUTE.AUTH.FOGOTPASSWORD} element={<ForgotPassword />} />
                     <Route path={ROUTE.AUTH.CHANGEPASSWORD} element={<ChangePassword />} />
-                    <Route path={ROUTE.USER.PROFILE} element={<Profile  />} />
                 </Route>
                 <Route path={'*'} element={<ProtectedRoute><PrivateOutlet /></ProtectedRoute>}>
                     <Route index path="task" element={<TaskList />} />
+                    <Route path={ROUTE.USER.PROFILE} element={<Profile  />} />
                 </Route>
             </Routes>
         </>

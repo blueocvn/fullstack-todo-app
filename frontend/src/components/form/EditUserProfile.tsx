@@ -1,4 +1,5 @@
-import { Container, Row, Form, Button, Card } from 'react-bootstrap';
+import { Container, Row, Form } from 'react-bootstrap';
+import { FloatingLabel, Button, Card } from "flowbite-react";
 import axios from 'axios';
 import { useEffect, useState, ChangeEvent, FormEvent } from 'react';
 
@@ -22,7 +23,7 @@ const EditUserProfile: React.FC = () => {
 
     useEffect(() => {
         axios
-            .get(`http://localhost:9999/user/${id}`)
+            .get(`http://127.0.0.1:8000/accounts/me`)
             .then((res) => {
                 setUserEdited({
                     fullName: res.data.fullName,
@@ -113,7 +114,7 @@ const EditUserProfile: React.FC = () => {
                         </Form.Group>
                     </Row>
                     <Row>
-                        <Button type="submit" variant="primary">
+                        <Button type="submit" >
                             Cập Nhật
                         </Button>
                     </Row>
