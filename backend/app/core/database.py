@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import types, create_engine
 from sqlalchemy.dialects.postgresql import TSVECTOR
 
-DATABASE_URL = 'postgresql://postgres:khang123@localhost:5432/Pet_Project_TodoApp'
+DATABASE_URL = 'postgresql://postgres:123@localhost:5432/Pet_Project_TodoApp'
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
