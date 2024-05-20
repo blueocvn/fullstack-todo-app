@@ -4,8 +4,8 @@ import { LoginFormValues } from '../../interfaces/form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-type LoginFormProps = {
-    onLogin: () => void
+interface LoginFormProps  {
+    onLogin: (data : LoginFormValues) => void
 }
 
 const loginSchema = yup
@@ -15,7 +15,7 @@ const loginSchema = yup
   })
   .required();
 
-const LoginForm = () => {
+const LoginForm = ({ onLogin } : LoginFormProps) => {
   const {
     register,
     handleSubmit,
@@ -24,26 +24,22 @@ const LoginForm = () => {
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit: SubmitHandler<LoginFormValues> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<LoginFormValues> =  (data) => {
+    onLogin(data)
   };
 
     return (
         <div>
             <Card className='w-96'>
                 <form className="flex max-w-md flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-                    <p className='mx-auto font-bold font-sans text-xl'>Đăng nhập</p>
+                    <p className='mx-auto mb-4 font-bold font-sans text-xl'>Đăng nhập</p>
                     <div>
-                        <div className="mb-2 block">
-                            <Label htmlFor="email1" value="Email" />
-                        </div>
                         <TextInput id="email1" type="email" placeholder="Email của bạn" {...register("email")} />
+                        <p className="text-red-500">{errors.email?.message}</p>
                     </div>
                     <div>
-                        <div className="mb-2 block">
-                            <Label htmlFor="password1" value="Password" />
-                        </div>
-                        <TextInput id="password1" type="password" placeholder='&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;' {...register("password")} />
+                        <TextInput id="password1" type="password" placeholder='Mật khẩu' {...register("password")} />
+                        <p className="text-red-500">{errors.password?.message}</p>
                     </div>
                     
                     <Button className='bg-blue-700 mt-6' type='submit'>Đăng nhập</Button>
