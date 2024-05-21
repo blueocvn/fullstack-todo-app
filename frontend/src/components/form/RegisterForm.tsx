@@ -3,14 +3,15 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { RegisterFormValues } from '../../interfaces/form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Link } from 'react-router-dom';
 
 interface RegisterFormProps {
   onRegister: (data: RegisterFormValues) => void;
-};
+}
 
 const registerSchema = yup
   .object({
-    name: yup.string().required("Vui lòng nhập tên của bạn"),
+    name: yup.string().required('Vui lòng nhập tên của bạn'),
     email: yup.string().required('Vui lòng nhập email').email('Vui lòng nhập đúng định dạng email'),
     password: yup.string().required('Vui lòng nhập mật khẩu'),
     confirmPassword: yup
@@ -20,7 +21,7 @@ const registerSchema = yup
   })
   .required();
 
-const RegisterForm = ({ onRegister } : RegisterFormProps) => {
+const RegisterForm = ({ onRegister }: RegisterFormProps) => {
   const {
     register,
     handleSubmit,
@@ -30,7 +31,7 @@ const RegisterForm = ({ onRegister } : RegisterFormProps) => {
   });
 
   const onSubmit: SubmitHandler<RegisterFormValues> = (data) => {
-    onRegister(data)
+    onRegister(data);
   };
 
   return (
@@ -40,14 +41,14 @@ const RegisterForm = ({ onRegister } : RegisterFormProps) => {
           <h3 className="text-xl text-center">Đăng ký</h3>
           <div>
             <div className="block mb-2">
-              <Label htmlFor="name1" value="Tên của bạn là"/>
+              <Label htmlFor="name1" value="Tên của bạn là" />
             </div>
             <TextInput
               type="text"
               autoComplete="off"
               placeholder="Tên của bạn"
               {...register('name')}
-              className={errors.name ? ':ring-red-500' : 'ring-cyan-500'}
+              color={errors.name ? 'failure' : 'gray'}
             />
             <p className="text-red-500">{errors.name?.message}</p>
           </div>
@@ -62,7 +63,7 @@ const RegisterForm = ({ onRegister } : RegisterFormProps) => {
               autoComplete="off"
               placeholder="Email"
               {...register('email')}
-              color={errors.email ? 'failure' : ''}
+              color={errors.email ? 'failure' : 'gray'}
             />
             <p className="text-red-500">{errors.email?.message}</p>
           </div>
@@ -74,7 +75,7 @@ const RegisterForm = ({ onRegister } : RegisterFormProps) => {
               type="password"
               placeholder="Password"
               {...register('password')}
-              color={errors.password ? 'failure' : ''}
+              color={errors.password ? 'failure' : 'gray'}
             />
             <p className="text-red-500">{errors.password?.message}</p>
           </div>
@@ -86,13 +87,22 @@ const RegisterForm = ({ onRegister } : RegisterFormProps) => {
               type="password"
               placeholder="Nhập lại mật khẩu"
               {...register('confirmPassword')}
-              color={errors.confirmPassword ? 'failure' : ''}
+              color={errors.confirmPassword ? 'failure' : 'gray'}
             />
             <p className="text-red-500">{errors.confirmPassword?.message}</p>
           </div>
+          <Link className="text-xs text-end" to={'/forgot-password'}>
+            Quên mật khẩu
+          </Link>
           <Button type="submit" className="bg-blue-500">
             Đăng ký
           </Button>
+          <div className="text-xs text-center text-dark">
+            <span>Bạn đã có tài khoản?</span>
+            <Link to={'/login'} className="text-blue-500">
+              Đăng nhập
+            </Link>
+          </div>
         </form>
       </Card>
     </div>

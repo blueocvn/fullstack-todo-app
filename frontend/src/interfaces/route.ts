@@ -6,3 +6,9 @@ export interface AppRoute {
   icons?: IconType;
   children?: AppRoute[];
 }
+
+export interface DropdownLink {
+  id: number;
+  label: string;
+  path?: string;
+}
