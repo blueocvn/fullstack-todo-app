@@ -1,7 +1,12 @@
 import { Badge, Button, Card, Table } from 'flowbite-react';
 import { Link, NavLink } from 'react-router-dom';
+import { Task } from '../../interfaces/task';
 
-const TaskTable = () => {
+interface TaskTableProps {
+  task: Task;
+}
+
+const TaskTable = ({ task }: TaskTableProps) => {
   return (
     <Card>
       <Link to={'/create'}>
@@ -17,16 +22,14 @@ const TaskTable = () => {
         </Table.Head>
         <Table.Body className="divide-y">
           <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-            <Table.Cell className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
-              Design giao diện
-            </Table.Cell>
-            <Table.Cell>Thiết kế ui trang chủ</Table.Cell>
-            <Table.Cell>10/07/2024</Table.Cell>
+            <Table.Cell className="font-medium text-gray-900 whitespace-nowrap dark:text-white">{task.name}</Table.Cell>
+            <Table.Cell>{task.description}</Table.Cell>
+            <Table.Cell>{task.due_date}</Table.Cell>
             <Table.Cell>
-              <Badge color="success">Hoàn thành</Badge>
+              <Badge color="success">{task.status}</Badge>
             </Table.Cell>
             <Table.Cell className="flex gap-5">
-              <NavLink to={'/task'} className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
+              <NavLink to={`/task/${task.id}`} className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
                 <Button>Sửa</Button>
               </NavLink>
               <Button className="bg-red-500">Xóa</Button>
