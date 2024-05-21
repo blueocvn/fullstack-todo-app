@@ -33,6 +33,10 @@ export const api = createApi({
       query: (body) => ({ method: 'POST', url: 'api/tasks', body }),
     }),
 
+    deleteTask: builder.mutation<{ code: string }, string>({
+      query: (id) => ({ method: 'DELETE', url: `api/tasks/${id}` }),
+    }),
+
     getAllTaskByOwner: builder.query<GetAllTaskResponse[], void>({
       query: () => 'api/tasks',
     }),
@@ -45,4 +49,5 @@ export const {
   useResetPasswordMutation,
   useGetAllTaskByOwnerQuery,
   useCreateTaskMutation,
+  useDeleteTaskMutation,
 } = api;
