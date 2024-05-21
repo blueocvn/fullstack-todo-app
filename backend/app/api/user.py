@@ -16,3 +16,7 @@ jwtBearer = JWTBearer()
 @router.get("")
 def search_users_by_email(search:str, db:Session = Depends(get_db), user:dict = Depends(jwtBearer)):
     return UserService.search_users_by_email(db, search)
+
+@router.get("/leader/{leader_id}/members")
+def get_members_by_leader(leader_id:UUID, db:Session = Depends(get_db), user:dict = Depends(jwtBearer)):
+    return UserService.get_all_members_by_leader(db, leader_id, user)

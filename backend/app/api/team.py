@@ -5,7 +5,7 @@ from uuid import UUID
 
 from app.core.database import get_db
 from app.middlewares.auth_middleware import JWTBearer
-from app.schemas.team import CreateTeam, Team
+from app.schemas.team import CreateTeam, Team, AddMember
 from app.services.team import TeamService
 
 router = APIRouter(prefix="/teams", tags=['Teams'])
@@ -31,3 +31,8 @@ def get_all_tasks_by_team(team_id:UUID, db:Session = Depends(get_db), user:dict 
 @router.post('')
 def create(payload:CreateTeam, db:Session = Depends(get_db), user:dict = Depends(jwtBearer)):
     return TeamService.create(db, payload, user)
+
+@router.post('/{team_id}/add')
+def add_member(team_id: UUID, payload:AddMember, db:Session = Depends(get_db), user:dict = Depends(jwtBearer)):
+    print(team_id)
+    return TeamService.add_team_member(db, team_id, payload, user)

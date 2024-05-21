@@ -14,20 +14,17 @@ import {
 } from 'flowbite-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { E_Task_Status } from '../../types/enums';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, FormEventHandler, useEffect, useState } from 'react';
 import {
+  useAddNewMemberMutation,
   useGetMembersByTeamQuery,
   useGetTasksByTeamQuery,
   useGetTeamDetailQuery,
   useLazySearchUsersByEmailQuery,
 } from '../../app/services/api';
 import { getTokens } from '../../utils/storage';
-
-const data = [
-  { task: 'task 1', assignee: 'Lộc Đào', status: 'pending' },
-  { task: 'task 2', assignee: 'Sơn', status: 'doing' },
-  { task: 'task 3', assignee: 'hoang', status: 'completed' },
-];
+import { enqueueSnackbar } from 'notistack';
+import AddTaskModal from '../../components/team/AddTask.component';
 
 export const TeamDetailPage = () => {
   const params = useParams<{ teamId: string }>();
@@ -36,19 +33,26 @@ export const TeamDetailPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [isLeader, setIsLeader] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
+  const [searchUsers, setSearchUsers] = useState<any[]>([]);
 
   const { teamId } = params;
   const { data: team } = useGetTeamDetailQuery(teamId || '');
   const { data: tasks } = useGetTasksByTeamQuery(teamId || '');
-  const { data: members } = useGetMembersByTeamQuery(teamId || '');
+  const { data: members, refetch } = useGetMembersByTeamQuery(teamId || '');
   const [trigger, { data: users }] = useLazySearchUsersByEmailQuery();
+  const [addNewMember] = useAddNewMemberMutation();
 
   useEffect(() => {
     const token = getTokens();
     if (token?.id == team?.leader_id) {
       setIsLeader(true);
     }
+    console.log(typeof refetch);
   }, [team]);
+
+  useEffect(() => {
+    setSearchUsers(users as any[]);
+  }, [users]);
 
   const naviagteTaskDetail = (path: string) => {
     navigate(path);
@@ -61,12 +65,37 @@ export const TeamDetailPage = () => {
     }
   };
 
+  const handleChooseUser = (email: string) => {
+    setEmail(email);
+    setSearchUsers([]);
+  };
+
+  const handleAddMember = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      await addNewMember({ team_id: String(teamId), body: { email } }).unwrap();
+      refetch();
+      setOpenModal(false);
+      enqueueSnackbar('Add new member successfully', {
+        variant: 'success',
+      });
+      setEmail('');
+    } catch (error: any) {
+      enqueueSnackbar(error?.data, {
+        variant: 'error',
+      });
+      setEmail('');
+    }
+  };
+
   return (
     <div className="grid grid-cols-10 gap-5">
       <div className="col-span-7 text-xl flex justify-center gap-3">
         <span>Team:</span>
         <span className="font-bold">{team?.name}</span>
       </div>
+      <div className="col-span-3 text-xl text-center">{isLeader && <AddTaskModal team_id={String(teamId)} />}</div>
       <div className="col-span-7 text-xl flex justify-center gap-3">
         <span>Leader:</span>
         <span className="font-bold">{team?.leader_name}</span>
@@ -82,7 +111,7 @@ export const TeamDetailPage = () => {
           <Modal.Header>Add new team's member</Modal.Header>
           <Modal.Body>
             <div className="w-full flex justify-center">
-              <form className="w-full flex max-w-md flex-col gap-4">
+              <form className="w-full flex max-w-md flex-col gap-4" onSubmit={handleAddMember}>
                 <div>
                   <div className="mb-2 block">
                     <Label htmlFor="member" value="Team's member" />
@@ -96,8 +125,8 @@ export const TeamDetailPage = () => {
                     onChange={(e) => handleChangeEmail(e)}
                   />
                   <ListGroup>
-                    {users?.map((user) => (
-                      <ListGroup.Item key={user?.id} onClick={() => setEmail(user?.email)}>
+                    {searchUsers?.map((user) => (
+                      <ListGroup.Item key={user?.id} onClick={() => handleChooseUser(user?.email)}>
                         {user?.email}
                       </ListGroup.Item>
                     ))}

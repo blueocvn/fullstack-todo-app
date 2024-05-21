@@ -18,3 +18,6 @@ class UpdateTask(BaseModel):
 
 class ChangeTaskStatus(BaseModel):
     status: TaskStatus
+
+class AssignTask(BaseModel):
+    member_id:UUID

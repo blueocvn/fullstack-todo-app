@@ -3,9 +3,10 @@ from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from uuid import UUID
 
-from app.schemas.task import CreateTask, UpdateTask, ChangeTaskStatus
+from app.schemas.task import CreateTask, UpdateTask, ChangeTaskStatus, AssignTask
 from app.models.user import UserModel
 from app.models.task import TaskModel
+from app.models.team import TeamModel
 from app.core.config import settings
 from app.utils.enums import TaskStatus
 
@@ -33,14 +34,22 @@ class TaskService:
 
             found_task = db.query(TaskModel).filter(
                     TaskModel.id == task_id,
-                    TaskModel.owner_id == user_id,
-                    TaskModel.assignee_id == user_id,
-                    TaskModel.team_id == None
                 ).first()
-            
             if found_task is None:
                 return JSONResponse(content="task not found", status_code=404)
             
+            found_team = db.query(TeamModel).filter(
+                TeamModel.id == found_task.team_id
+                ).first()
+            if found_team is None:
+                return JSONResponse(content="team not found", status_code=404)
+            
+            if user_id != str(found_team.leader_id) and not any(str(member.id) == user_id for member in found_team.members):
+                return JSONResponse(content="you are not team's member", status_code=403)
+            
+            found_task.assignee_name = found_task.assignee.username
+            found_task.leader_name = found_task.owner.username
+            found_task.team_name = found_task.team.name
             return found_task
         except Exception as e:
             db.rollback()
@@ -112,6 +121,26 @@ class TaskService:
         except Exception as e:
             raise HTTPException(status_code=500, detail="Internal server error")
         
+    @staticmethod
+    def assign_task(db: Session, task_id:str, payload:AssignTask, user:dict):
+        try:
+            user_id = user.get('id')
+
+            found_task = db.query(TaskModel).filter(
+                    TaskModel.id == task_id,
+                    TaskModel.owner_id == user_id
+                ).first()
+            if found_task is None:
+                return JSONResponse(content="task not found", status_code=404)
+            
+            found_task.assignee_id = payload.member_id
+            
+            db.commit()
+            db.refresh(found_task)
+            return found_task
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="Internal server error")
+
     @staticmethod
     def delete(db: Session, task_id:UUID, user:dict):
         try:

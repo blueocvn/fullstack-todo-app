@@ -123,6 +123,8 @@ class TeamService:
     @staticmethod
     def add_team_member(db:Session, team_id:UUID, payload:AddMember, user:dict):
         try:
+            print('1111:', team_id)
+            print('22222222:', payload.email)
             user_id = user.get('id')
 
             found_team = db.query(TeamModel).filter(
@@ -133,9 +135,12 @@ class TeamService:
             if found_team is None:
                 return JSONResponse(content="team not found", status_code=404)
             
-            found_member = db.query(UserModel).filter(UserModel.id == payload.member_id).first()
+            found_member = db.query(UserModel).filter(UserModel.email == payload.email).first()
             if found_member is None:
                 return JSONResponse(content="member not found", status_code=404)
+            
+            if any(member.id == found_member.id for member in found_team.members):
+                return JSONResponse(content="this member has already existed in this team", status_code=404)
             
             found_team.members.append(found_member)
 
