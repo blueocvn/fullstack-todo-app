@@ -9,7 +9,8 @@ export interface TeamTaskModel {
 export interface TeamModel {
     id: string
     name: string
-    leader: string
+    leader_id: string
+    leader_name: string
 }
 
 export interface CreateTeamModel {

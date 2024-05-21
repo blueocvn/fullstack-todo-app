@@ -34,9 +34,30 @@ export const api = createApi({
       query: () => 'api/tasks',
     }),
 
+    // user
+    searchUsersByEmail: builder.query<any[], string>({
+      query: (search) => `api/users?search=${search}`,
+    }),
+
     // team
-    createNewTeam: builder.mutation<TeamModel[], CreateTeamModel>({
+    createNewTeam: builder.mutation<TeamModel, CreateTeamModel>({
       query: (body) => ({ method: 'POST', url: 'api/teams', body }),
+    }),
+
+    getAllTeamByUser: builder.query<TeamModel[], void>({
+      query: () => 'api/teams',
+    }),
+
+    getTeamDetail: builder.query<TeamModel, string>({
+      query: (team_id) => `api/teams/${team_id}`,
+    }),
+
+    getTasksByTeam: builder.query<any[], string>({
+      query: (team_id) => `api/teams/${team_id}/tasks`,
+    }),
+
+    getMembersByTeam: builder.query<any[], string>({
+      query: (team_id) => `api/teams/${team_id}/members`,
     }),
   }),
 });
@@ -46,5 +67,12 @@ export const {
   useLoginMutation,
   useResetPasswordMutation,
   useGetAllTaskByOwnerQuery,
-  useCreateNewTeamMutation
+  // user
+  useLazySearchUsersByEmailQuery,
+  // team
+  useCreateNewTeamMutation,
+  useGetAllTeamByUserQuery,
+  useGetTeamDetailQuery,
+  useGetTasksByTeamQuery,
+  useGetMembersByTeamQuery
 } = api;

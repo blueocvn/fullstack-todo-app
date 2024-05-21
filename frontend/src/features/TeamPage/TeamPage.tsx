@@ -1,7 +1,7 @@
 import { Button, Label, ListGroup, ListGroupItem, Modal, TextInput } from 'flowbite-react';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCreateNewTeamMutation } from '../../app/services/api';
+import { useCreateNewTeamMutation, useGetAllTeamByUserQuery } from '../../app/services/api';
 
 export const TeamPage = () => {
   const navigate = useNavigate();
@@ -9,6 +9,7 @@ export const TeamPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   const [createNewTeam] = useCreateNewTeamMutation();
+  const { data: teams } = useGetAllTeamByUserQuery();
 
   const navigateTeamDetail = (path: string) => {
     navigate(path);
@@ -59,12 +60,12 @@ export const TeamPage = () => {
       </div>
 
       <ListGroup className="w-full col-span-1">
-        {[1, 2, 3, 4].map((item) => (
-          <ListGroupItem key={item} onClick={() => navigateTeamDetail(`/teams/${item}`)}>
+        {teams?.map((team) => (
+          <ListGroupItem key={team.id} onClick={() => navigateTeamDetail(`/teams/${team.id}`)}>
             <div className="w-full flex justify-center gap-5">
-              <span>Team {item}</span>
+              <span>{team.name}</span>
               <span>-</span>
-              <span>Hoàng Phan</span>
+              <span>{team.leader_name}</span>
             </div>
           </ListGroupItem>
         ))}

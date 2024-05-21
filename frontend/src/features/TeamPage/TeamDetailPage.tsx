@@ -14,7 +14,14 @@ import {
 } from 'flowbite-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { E_Task_Status } from '../../types/enums';
-import { useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
+import {
+  useGetMembersByTeamQuery,
+  useGetTasksByTeamQuery,
+  useGetTeamDetailQuery,
+  useLazySearchUsersByEmailQuery,
+} from '../../app/services/api';
+import { getTokens } from '../../utils/storage';
 
 const data = [
   { task: 'task 1', assignee: 'Lộc Đào', status: 'pending' },
@@ -23,31 +30,54 @@ const data = [
 ];
 
 export const TeamDetailPage = () => {
-  const params = useParams();
+  const params = useParams<{ teamId: string }>();
   const navigate = useNavigate();
 
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [isLeader, setIsLeader] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>('');
 
   const { teamId } = params;
+  const { data: team } = useGetTeamDetailQuery(teamId || '');
+  const { data: tasks } = useGetTasksByTeamQuery(teamId || '');
+  const { data: members } = useGetMembersByTeamQuery(teamId || '');
+  const [trigger, { data: users }] = useLazySearchUsersByEmailQuery();
+
+  useEffect(() => {
+    const token = getTokens();
+    if (token?.id == team?.leader_id) {
+      setIsLeader(true);
+    }
+  }, [team]);
 
   const naviagteTaskDetail = (path: string) => {
     navigate(path);
+  };
+
+  const handleChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (e.target.value) {
+      trigger(e.target.value);
+    }
   };
 
   return (
     <div className="grid grid-cols-10 gap-5">
       <div className="col-span-7 text-xl flex justify-center gap-3">
         <span>Team:</span>
-        <span className="font-bold">{teamId}</span>
+        <span className="font-bold">{team?.name}</span>
       </div>
       <div className="col-span-7 text-xl flex justify-center gap-3">
         <span>Leader:</span>
-        <span className="font-bold">Hoàng Phan</span>
+        <span className="font-bold">{team?.leader_name}</span>
       </div>
       <div className="col-span-3 text-xl text-center">
-        <Button className="w-full" onClick={() => setOpenModal(true)}>
-          Add member
-        </Button>
+        {isLeader && (
+          <Button className="w-full" onClick={() => setOpenModal(true)}>
+            Add member
+          </Button>
+        )}
+
         <Modal show={openModal} onClose={() => setOpenModal(false)}>
           <Modal.Header>Add new team's member</Modal.Header>
           <Modal.Body>
@@ -57,7 +87,21 @@ export const TeamDetailPage = () => {
                   <div className="mb-2 block">
                     <Label htmlFor="member" value="Team's member" />
                   </div>
-                  <TextInput id="member" type="text" placeholder="Nguyen Van A" required />
+                  <TextInput
+                    id="member"
+                    type="text"
+                    placeholder="nguyen@gmail.com"
+                    required
+                    value={email}
+                    onChange={(e) => handleChangeEmail(e)}
+                  />
+                  <ListGroup>
+                    {users?.map((user) => (
+                      <ListGroup.Item key={user?.id} onClick={() => setEmail(user?.email)}>
+                        {user?.email}
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
                 </div>
 
                 <div className="flex justify-between gap-5">
@@ -83,22 +127,22 @@ export const TeamDetailPage = () => {
           </TableHead>
 
           <TableBody className="divide-y text-black">
-            {data.map((item) => (
-              <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800" key={item.task}>
-                <TableCell onClick={() => naviagteTaskDetail(`/teams/task/${item.task}`)}>
-                  <p className="cursor-pointer hover:text-blue-500 hover:underline">{item.task}</p>
+            {tasks?.map((task) => (
+              <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800" key={task?.id}>
+                <TableCell onClick={() => naviagteTaskDetail(`/teams/task/${task?.id}`)}>
+                  <p className="cursor-pointer hover:text-blue-500 hover:underline">{task?.title}</p>
                 </TableCell>
-                <TableCell>{item.assignee}</TableCell>
+                <TableCell>{task?.assignee_name}</TableCell>
                 <TableCell
                   className={
-                    item.status === E_Task_Status.DOING
+                    task?.status === E_Task_Status.DOING
                       ? 'text-blue-500'
-                      : item.status === E_Task_Status.COMPLETED
+                      : task?.status === E_Task_Status.COMPLETED
                         ? 'text-green-500'
                         : 'text-gray-500'
                   }
                 >
-                  {item.status}
+                  {task?.status}
                 </TableCell>
               </TableRow>
             ))}
@@ -108,9 +152,9 @@ export const TeamDetailPage = () => {
 
       <div className="col-span-3">
         <ListGroup className="w-full col-span-1">
-          {[1, 2, 3, 4].map((item) => (
-            <ListGroupItem key={item}>
-              <p className="w-full flex justify-center gap-5">Hoàng Phan</p>
+          {members?.map((member) => (
+            <ListGroupItem key={member?.id}>
+              <p className="w-full flex justify-center gap-5">{member?.username}</p>
             </ListGroupItem>
           ))}
         </ListGroup>

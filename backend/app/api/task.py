@@ -32,6 +32,6 @@ def update(task_id:UUID, payload:UpdateTask, db:Session = Depends(get_db), user:
 def update(task_id:UUID, payload:ChangeTaskStatus, db:Session = Depends(get_db), user:dict = Depends(jwtBearer)): 
     return TaskService.change_task_status(db, task_id, payload, user)
 
-@router.delete("")
+@router.delete("/{task_id}")
 def delete(task_id:UUID, db:Session = Depends(get_db), user:dict = Depends(jwtBearer)): 
     return TaskService.delete(db, task_id, user)

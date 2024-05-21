@@ -11,11 +11,9 @@ class Team(BaseModel):
     id:UUID
     name:str
     leader_name:str
-    members:List[User]
 
 class CreateTeam(BaseModel):
     name:str
-    leader_id:UUID
 
 class AddMember(BaseModel):
     member_id:UUID
