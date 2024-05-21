@@ -1,9 +1,9 @@
-import { Task } from '../../interfaces/task';
+import { TaskResponse } from '../../interfaces/task';
 import { api } from './api';
 
 const taskApi = api.injectEndpoints({
   endpoints: (build) => ({
-    getTasks: build.query<Task[], void>({
+    getTasks: build.query<TaskResponse, void>({
       query: () => '/tasks/',
     }),
   }),
