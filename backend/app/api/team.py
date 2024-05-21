@@ -36,3 +36,8 @@ def create(payload:CreateTeam, db:Session = Depends(get_db), user:dict = Depends
 def add_member(team_id: UUID, payload:AddMember, db:Session = Depends(get_db), user:dict = Depends(jwtBearer)):
     print(team_id)
     return TeamService.add_team_member(db, team_id, payload, user)
+
+@router.delete('/{team_id}')
+def delete(team_id: UUID, db:Session = Depends(get_db), user:dict = Depends(jwtBearer)):
+    print(team_id)
+    return TeamService.delete(db, team_id, user)

@@ -45,7 +45,7 @@ export default function AddTaskModal({ team_id }: { team_id: string }) {
                 <TextInput
                   id="title"
                   type="text"
-                  placeholder="nguyen@gmail.com"
+                  placeholder="task for team..."
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}

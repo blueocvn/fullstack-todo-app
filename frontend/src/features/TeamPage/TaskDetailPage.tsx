@@ -2,13 +2,19 @@ import { Dropdown, Table, TableBody, TableCell, TableRow } from 'flowbite-react'
 import { useParams } from 'react-router-dom';
 import { E_Task_Status } from '../../types/enums';
 import { useEffect, useMemo, useState } from 'react';
-import { useAssignTaskMutation, useGetMembersByLeaderQuery, useGetTaskDetailQuery } from '../../app/services/api';
+import {
+  useAssignTaskMutation,
+  useGetMembersByLeaderQuery,
+  useGetTaskDetailQuery,
+  useUpdateTaskStatusMutation,
+} from '../../app/services/api';
 import { getTokens } from '../../utils/storage';
+import { enqueueSnackbar } from 'notistack';
 
 export const TaskDetailPage = () => {
   const params = useParams();
 
-  const [status, setStatus] = useState<string>(E_Task_Status.PENDING);
+  const [status, setStatus] = useState<string>('');
   const [assignee, setAssignee] = useState<string>('');
   const [isAssignee, setIsAssignee] = useState<boolean>(false);
   const [isLeader, setIsLeader] = useState<boolean>(false);
@@ -18,9 +24,10 @@ export const TaskDetailPage = () => {
   }, []);
 
   const { taskId } = params;
-  const { data: task } = useGetTaskDetailQuery(taskId || '');
+  const { data: task, refetch } = useGetTaskDetailQuery(taskId || '');
   const { data: members } = useGetMembersByLeaderQuery(token?.id || '');
   const [assigntask] = useAssignTaskMutation();
+  const [updateTaskStatus] = useUpdateTaskStatusMutation();
 
   useEffect(() => {
     setStatus(task?.status);
@@ -35,7 +42,21 @@ export const TaskDetailPage = () => {
     }
   }, [task]);
 
-  const changeStatus = (status: string) => {
+  const changeStatus = async (status: string) => {
+    try {
+      await updateTaskStatus({
+        task_id: taskId as string,
+        body: { status: status },
+      }).unwrap();
+      refetch();
+      enqueueSnackbar('task has been assigned successfully!', {
+        variant: 'success',
+      });
+    } catch (error: any) {
+      enqueueSnackbar(error?.data, {
+        variant: 'error',
+      });
+    }
     setStatus(status);
   };
 
@@ -43,8 +64,15 @@ export const TaskDetailPage = () => {
     setAssignee(name);
     try {
       await assigntask({ task_id: String(taskId), body: { member_id: id } }).unwrap();
-    } catch (error) {
-      console.log(error);
+      refetch();
+      setIsAssignee(false);
+      enqueueSnackbar('task has been assigned successfully!', {
+        variant: 'success',
+      });
+    } catch (error: any) {
+      enqueueSnackbar(error?.data, {
+        variant: 'error',
+      });
     }
   };
 
@@ -56,7 +84,9 @@ export const TaskDetailPage = () => {
         <TableBody className="divide-y text-black">
           <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
             <TableCell className="w-1/5 font-bold text-sm">Todo</TableCell>
-            <TableCell>{task?.title}</TableCell>
+            <TableCell className={task?.status == E_Task_Status.COMPLETED ? 'line-through' : ''}>
+              {task?.title}
+            </TableCell>
           </TableRow>
 
           <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">

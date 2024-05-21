@@ -39,6 +39,14 @@ export const api = createApi({
       query: (body) => ({ method: 'POST', url: 'api/tasks', body }),
     }),
 
+    updateTask: builder.mutation<{ code: string }, { task_id: string, body: { title: string } }>({
+      query: ({ task_id, body }) => ({ method: 'PATCH', url: `api/tasks/${task_id}`, body }),
+    }),
+
+    updateTaskStatus: builder.mutation<{ code: string }, { task_id: string, body: { status: string } }>({
+      query: ({ task_id, body }) => ({ method: 'PATCH', url: `api/tasks/${task_id}/status`, body }),
+    }),
+
     assignTask: builder.mutation<{ code: string }, { task_id: string, body: { member_id: string } }>({
       query: ({ task_id, body }) => ({ method: 'PUT', url: `api/tasks/${task_id}/assign`, body }),
     }),
@@ -84,6 +92,10 @@ export const api = createApi({
     getMembersByLeader: builder.query<any[], string>({
       query: (leader_id) => `api/users/leader/${leader_id}/members`,
     }),
+
+    deleteTeam: builder.mutation<{ code: string }, string>({
+      query: (team_id) => ({ method: 'DELETE', url: `api/teams/${team_id}` }),
+    }),
   }),
 });
 
@@ -95,6 +107,8 @@ export const {
   useGetTaskDetailQuery,
   useGetAllTaskByOwnerQuery,
   useCreateTaskMutation,
+  useUpdateTaskMutation,
+  useUpdateTaskStatusMutation,
   useAssignTaskMutation,
   useDeleteTaskMutation,
   // user
@@ -106,5 +120,6 @@ export const {
   useGetTeamDetailQuery,
   useGetTasksByTeamQuery,
   useGetMembersByTeamQuery,
-  useGetMembersByLeaderQuery
+  useGetMembersByLeaderQuery,
+  useDeleteTeamMutation
 } = api;
