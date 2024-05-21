@@ -1,13 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Label, Modal, Table, TextInput } from 'flowbite-react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { FaRegTrashCan } from 'react-icons/fa6';
+import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import { IoIosAddCircle } from 'react-icons/io';
 import * as Yup from 'yup';
 
 import { enqueueSnackbar } from 'notistack';
-import { useCreateTaskMutation, useGetAllTaskByOwnerQuery } from '../../app/services/api';
+import { useCreateTaskMutation, useDeleteTaskMutation, useGetAllTaskByOwnerQuery } from '../../app/services/api';
 import { TaskModel } from '../../types/Task';
 
 const newCreateTaskSchema = Yup.object().shape({
@@ -16,8 +17,11 @@ const newCreateTaskSchema = Yup.object().shape({
 
 export const HomePage = () => {
   const { data: tasks, refetch } = useGetAllTaskByOwnerQuery();
-  const [openModal, setOpenModal] = useState(false);
   const [createTask] = useCreateTaskMutation();
+  const [deleteTask] = useDeleteTaskMutation();
+  const [openModal, setOpenModal] = useState(false);
+  const [openModalDelete, setOpenModelDelete] = useState(false);
+  const [idTask, setIdTask] = useState('');
 
   const {
     handleSubmit,
@@ -43,6 +47,21 @@ export const HomePage = () => {
       });
     }
   }
+
+  const handleDeleteTask = useCallback((id: string) => {
+    (async () => {
+      try {
+        deleteTask(id);
+        refetch();
+        setOpenModelDelete(false);
+        enqueueSnackbar('Delete success !', { variant: 'success' });
+      } catch (error) {
+        enqueueSnackbar('Delete fail !', {
+          variant: 'warning',
+        });
+      }
+    })();
+  }, []);
 
   return (
     <div className="overflow-x-auto">
@@ -83,12 +102,17 @@ export const HomePage = () => {
                 Edit
               </Table.Cell>
               <Table.Cell>
-                <FaRegTrashCan color="red" className="hover:cursor-pointer" />
+                <FaRegTrashCan
+                  color="red"
+                  className="hover:cursor-pointer"
+                  onClick={() => (setOpenModelDelete(true), setIdTask(task?.id))}
+                />
               </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
       </Table>
+
       <Modal show={openModal} onClose={() => setOpenModal(false)}>
         <Modal.Header>Create new task</Modal.Header>
         <Modal.Body>
@@ -126,6 +150,26 @@ export const HomePage = () => {
                 </Button>
               </div>
             </form>
+          </div>
+        </Modal.Body>
+      </Modal>
+
+      <Modal show={openModalDelete} size="md" onClose={() => setOpenModelDelete(false)} popup>
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+              Are you sure you want to delete this task?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={() => handleDeleteTask(idTask)}>
+                {"Yes, I'm sure"}
+              </Button>
+              <Button color="gray" onClick={() => setOpenModelDelete(false)}>
+                No, cancel
+              </Button>
+            </div>
           </div>
         </Modal.Body>
       </Modal>
