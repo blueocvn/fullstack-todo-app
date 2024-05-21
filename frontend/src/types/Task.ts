@@ -6,6 +6,7 @@ export interface GetAllTaskResponse {
 
 export interface TaskModel {
   title: string;
+  team_id?: string
 }
 
 export interface TaskParams {

@@ -72,6 +72,7 @@ class AuthService:
             "refresh_token": refresh_token,
             "username": found_user.username,
             "email": found_user.email,
+            "id":found_user.id
         }
 
         return response_data

@@ -3,7 +3,7 @@ from uuid import UUID
 
 from app.core.database import get_db
 from app.middlewares.auth_middleware import JWTBearer
-from app.schemas.task import ChangeTaskStatus, CreateTask, UpdateTask, UserTask
+from app.schemas.task import ChangeTaskStatus, CreateTask, UpdateTask, UserTask, AssignTask
 from app.services.task import TaskService
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -20,7 +20,7 @@ def get_all_tasks_by_user(
     return TaskService.get_all_tasks_by_user(db, user)
 
 
-@router.get("/{task_id}", response_model=UserTask)
+@router.get("/{task_id}")
 def get_one_task(
     task_id: UUID, db: Session = Depends(get_db), user: dict = Depends(jwtBearer)
 ):
@@ -53,9 +53,10 @@ def update(
 ):
     return TaskService.change_task_status(db, task_id, payload, user)
 
-
 @router.delete("/{task_id}")
-def delete(
-    task_id: UUID, db: Session = Depends(get_db), user: dict = Depends(jwtBearer)
-):
+def delete(task_id:UUID, db:Session = Depends(get_db), user:dict = Depends(jwtBearer)): 
     return TaskService.delete(db, task_id, user)
+
+@router.put("/{task_id}/assign")
+def assign_task(task_id:UUID, payload:AssignTask, db:Session = Depends(get_db), user:dict = Depends(jwtBearer)): 
+    return TaskService.assign_task(db, task_id, payload, user)

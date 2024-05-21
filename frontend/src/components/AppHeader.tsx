@@ -52,7 +52,7 @@ export const AppHeader = () => {
           trigger={'click'}
           placement={'bottom-end'}
           interactive={true}
-          render={(attrs) => (
+          render={(attrs: any) => (
             <div tabIndex={-1} {...attrs} className="w-52 h-36 shadow-md ">
               <div className="border-b-2 border-b-border w-full flex flex-col items-center py-1">
                 <Avatar rounded />
