@@ -15,10 +15,11 @@ const newResetPasswordSchema = Yup.object().shape({
 
 interface Props {
   onResetPasswordFrame?: (data: ResetPasswordModel) => void;
+  isLoading: boolean;
 }
 
 export const ResetPasswordForm = (props: Props) => {
-  const { onResetPasswordFrame = () => {} } = props;
+  const { onResetPasswordFrame = () => {}, isLoading } = props;
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const navigate = useNavigate();
@@ -121,6 +122,7 @@ export const ResetPasswordForm = (props: Props) => {
           type="submit"
           onClick={handleSubmit(handleChangeData)}
           disabled={errors?.old_password || errors?.new_password ? true : false}
+          isProcessing={isLoading}
         >
           Confirm
         </Button>

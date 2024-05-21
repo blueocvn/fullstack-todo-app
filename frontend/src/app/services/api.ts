@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { LoginModel, LoginResponse, RegisterModel, RegisterResponse, ResetPasswordModel } from '../../types/Auth';
-import { GetAllTaskResponse, TaskModel } from '../../types/Task';
+import { GetAllTaskResponse, TaskModel, UpdateStatusTaskModel, UpdateTaskModel } from '../../types/Task';
 import { getTokens } from '../../utils/storage';
 
 export const api = createApi({
@@ -40,6 +40,14 @@ export const api = createApi({
     getAllTaskByOwner: builder.query<GetAllTaskResponse[], void>({
       query: () => 'api/tasks',
     }),
+
+    updateTitleTask: builder.mutation<{ code: string }, UpdateTaskModel>({
+      query: ({ id, ...body }) => ({ method: 'PATCH', url: `api/tasks/${id}`, body }),
+    }),
+
+    updateStatusTask: builder.mutation<{ code: string }, UpdateStatusTaskModel>({
+      query: ({ id, ...body }) => ({ method: 'PATCH', url: `api/tasks/${id}/status`, body }),
+    }),
   }),
 });
 
@@ -50,4 +58,6 @@ export const {
   useGetAllTaskByOwnerQuery,
   useCreateTaskMutation,
   useDeleteTaskMutation,
+  useUpdateTitleTaskMutation,
+  useUpdateStatusTaskMutation,
 } = api;

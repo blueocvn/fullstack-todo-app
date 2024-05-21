@@ -15,10 +15,11 @@ const newRegisterSchema = Yup.object().shape({
 
 interface Props {
   onLoginFrame?: (data: LoginModel) => void;
+  isLoading: boolean;
 }
 
 export const LoginForm = (props: Props) => {
-  const { onLoginFrame = () => {} } = props;
+  const { onLoginFrame = () => {}, isLoading } = props;
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -108,6 +109,7 @@ export const LoginForm = (props: Props) => {
           type="submit"
           onClick={handleSubmit(handleChangeData)}
           disabled={errors?.email || errors?.password ? true : false}
+          isProcessing={isLoading}
         >
           Login
         </Button>
