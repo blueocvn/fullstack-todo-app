@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import React from 'react';
-import './App.css';
-=======
 import { Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { ROUTE } from './configs/routes';
@@ -18,7 +14,6 @@ const Profile = lazy(() => import('./features/user/UserProfile'));
 const ForgotPassword = lazy(() => import('./features/auth/ForgotPassword'));
 const ChangePassword = lazy(() => import('./features/auth/ChangePassword'));
 const NotFound = lazy(() => import('./components/NotFound'));
->>>>>>> 2086d8d57b79df46fdd6bcdf7d5a5c5345a6f551
 
 function App() {
   axios.defaults.baseURL = 'http://localhost:8000';
