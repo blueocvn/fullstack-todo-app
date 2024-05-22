@@ -25,7 +25,7 @@ function App() {
         <Route path={ROUTE.AUTH.REGISTER} element={<Register />} />
         <Route path={ROUTE.AUTH.LOGIN} element={<Login />} />
         <Route path={ROUTE.AUTH.FOGOTPASSWORD} element={<ForgotPassword />} />
-        <Route path={ROUTE.AUTH.CHANGEPASSWORD} element={<ChangePassword />} />
+        
         <Route
           path={ROUTE.ROOT}
           element={
@@ -37,6 +37,7 @@ function App() {
           <Route index path={ROUTE.TASK.ROOT} element={<TaskList />} />
           <Route path={ROUTE.TASK.CREATE} element={<TaskAdd />} />
           <Route path={ROUTE.USER.PROFILE} element={<Profile />} />
+          <Route path={ROUTE.AUTH.CHANGEPASSWORD} element={<ChangePassword />} />
         </Route>
         <Route path={'*'} element={<NotFound />} />
       </Routes>

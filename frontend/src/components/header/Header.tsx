@@ -7,10 +7,10 @@ const Header = () => {
   return (
     <header>
       <Navbar fluid rounded className="border-b shadow-sm">
-        <Navbar.Brand as={NavLink}>
-          <img src={logo} className="h-6 mr-3 sm:h-9" alt="Logo" />
-          <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Todo Task</span>
-        </Navbar.Brand>
+      <Navbar.Brand as={NavLink} to="/task">
+        <img src={logo} className="h-6 mr-3 sm:h-9" alt="Logo" />
+        <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Todo Task</span>
+      </Navbar.Brand>
         <div className="flex items-center gap-4">
           <Avatar rounded />
           <UserDropdown />
