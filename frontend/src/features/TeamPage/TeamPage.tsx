@@ -2,6 +2,7 @@ import { Button, Label, ListGroup, ListGroupItem, Modal, TextInput } from 'flowb
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCreateNewTeamMutation, useGetAllTeamByUserQuery } from '../../app/services/api';
+import { enqueueSnackbar } from 'notistack';
 
 export const TeamPage = () => {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ export const TeamPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   const [createNewTeam] = useCreateNewTeamMutation();
-  const { data: teams } = useGetAllTeamByUserQuery();
+  const { data: teams, refetch } = useGetAllTeamByUserQuery();
 
   const navigateTeamDetail = (path: string) => {
     navigate(path);
@@ -22,9 +23,17 @@ export const TeamPage = () => {
     const teamName = formData.get('name') as string;
 
     try {
-      const newTeam = await createNewTeam({ name: teamName }).unwrap();
-      console.log(newTeam);
-    } catch (error) {}
+      await createNewTeam({ name: teamName }).unwrap();
+      refetch();
+      setOpenModal(false);
+      enqueueSnackbar('team has been created successfully', {
+        variant: 'success',
+      });
+    } catch (error: any) {
+      enqueueSnackbar(error?.data, {
+        variant: 'error',
+      });
+    }
   };
 
   return (

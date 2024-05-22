@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Label, Modal, Table, TextInput } from 'flowbite-react';
+import { Button, Dropdown, Label, Modal, Table, TextInput } from 'flowbite-react';
 import { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { FaRegTrashCan } from 'react-icons/fa6';
@@ -8,8 +8,15 @@ import { IoIosAddCircle } from 'react-icons/io';
 import * as Yup from 'yup';
 
 import { enqueueSnackbar } from 'notistack';
-import { useCreateTaskMutation, useDeleteTaskMutation, useGetAllTaskByOwnerQuery } from '../../app/services/api';
+import {
+  useCreateTaskMutation,
+  useDeleteTaskMutation,
+  useGetAllTaskByOwnerQuery,
+  useUpdateTaskStatusMutation,
+} from '../../app/services/api';
 import { TaskModel } from '../../types/Task';
+import EditModal from '../../components/home/EditModal';
+import { E_Task_Status } from '../../types/enums';
 
 const newCreateTaskSchema = Yup.object().shape({
   title: Yup.string().required('please enter title'),
@@ -17,6 +24,7 @@ const newCreateTaskSchema = Yup.object().shape({
 
 export const HomePage = () => {
   const { data: tasks, refetch } = useGetAllTaskByOwnerQuery();
+  const [updateTaskStatus] = useUpdateTaskStatusMutation();
   const [createTask] = useCreateTaskMutation();
   const [deleteTask] = useDeleteTaskMutation();
   const [openModal, setOpenModal] = useState(false);
@@ -63,8 +71,18 @@ export const HomePage = () => {
     })();
   }, []);
 
+  const handleUpdateTaskStatus = async (status: string, task_id: string) => {
+    try {
+      await updateTaskStatus({
+        task_id,
+        body: { status },
+      }).unwrap();
+      refetch();
+    } catch (error) {}
+  };
+
   return (
-    <div className="overflow-x-auto">
+    <div>
       <Table>
         <Table.Head>
           <Table.HeadCell>Task</Table.HeadCell>
@@ -85,21 +103,21 @@ export const HomePage = () => {
           {tasks?.map((task) => (
             <Table.Row key={task?.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
               <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                {task?.title}
+                <p className={task?.status == E_Task_Status.COMPLETED ? 'line-through' : ''}>{task?.title}</p>
               </Table.Cell>
               <Table.Cell
                 className={
-                  task?.status == 'pending'
+                  task?.status == E_Task_Status.PENDING
                     ? 'text-gray-500'
-                    : task?.status == 'doing'
+                    : task?.status == E_Task_Status.DOING
                       ? 'text-blue-500'
                       : 'text-green-500'
                 }
               >
                 {task?.status}
               </Table.Cell>
-              <Table.Cell className="font-medium text-cyan-600 hover:underline cursor-pointer dark:text-cyan-500">
-                Edit
+              <Table.Cell>
+                <EditModal task={task} />
               </Table.Cell>
               <Table.Cell>
                 <FaRegTrashCan
@@ -107,6 +125,19 @@ export const HomePage = () => {
                   className="hover:cursor-pointer"
                   onClick={() => (setOpenModelDelete(true), setIdTask(task?.id))}
                 />
+              </Table.Cell>
+              <Table.Cell>
+                <Dropdown label="chage status">
+                  <Dropdown.Item onClick={() => handleUpdateTaskStatus(E_Task_Status.PENDING, task?.id)}>
+                    {E_Task_Status.PENDING}
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleUpdateTaskStatus(E_Task_Status.DOING, task?.id)}>
+                    {E_Task_Status.DOING}
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleUpdateTaskStatus(E_Task_Status.COMPLETED, task?.id)}>
+                    {E_Task_Status.COMPLETED}
+                  </Dropdown.Item>
+                </Dropdown>
               </Table.Cell>
             </Table.Row>
           ))}

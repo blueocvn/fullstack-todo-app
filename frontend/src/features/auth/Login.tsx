@@ -11,6 +11,7 @@ export const Login = () => {
   async function handleLogin(data: LoginModel) {
     try {
       const token = await login(data).unwrap();
+
       setTokens(token);
       window.location.reload();
     } catch (error) {

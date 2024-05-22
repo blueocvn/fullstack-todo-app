@@ -14,7 +14,7 @@ import {
 } from 'flowbite-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { E_Task_Status } from '../../types/enums';
-import { ChangeEvent, FormEvent, FormEventHandler, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import {
   useAddNewMemberMutation,
   useGetMembersByTeamQuery,
@@ -24,7 +24,8 @@ import {
 } from '../../app/services/api';
 import { getTokens } from '../../utils/storage';
 import { enqueueSnackbar } from 'notistack';
-import AddTaskModal from '../../components/team/AddTask.component';
+import AddTaskModal from '../../components/team/AddTaskModal';
+import DeleteTeamModal from '../../components/team/deleteTeamModal';
 
 export const TeamDetailPage = () => {
   const params = useParams<{ teamId: string }>();
@@ -44,10 +45,10 @@ export const TeamDetailPage = () => {
 
   useEffect(() => {
     const token = getTokens();
+
     if (token?.id == team?.leader_id) {
       setIsLeader(true);
     }
-    console.log(typeof refetch);
   }, [team]);
 
   useEffect(() => {
@@ -158,7 +159,10 @@ export const TeamDetailPage = () => {
           <TableBody className="divide-y text-black">
             {tasks?.map((task) => (
               <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800" key={task?.id}>
-                <TableCell onClick={() => naviagteTaskDetail(`/teams/task/${task?.id}`)}>
+                <TableCell
+                  onClick={() => naviagteTaskDetail(`/teams/task/${task?.id}`)}
+                  className={task?.status == E_Task_Status.COMPLETED ? 'line-through' : ''}
+                >
                   <p className="cursor-pointer hover:text-blue-500 hover:underline">{task?.title}</p>
                 </TableCell>
                 <TableCell>{task?.assignee_name}</TableCell>
@@ -188,6 +192,8 @@ export const TeamDetailPage = () => {
           ))}
         </ListGroup>
       </div>
+
+      <div className="col-span-7">{isLeader && <DeleteTeamModal team_id={team?.id as string} />}</div>
     </div>
   );
 };
