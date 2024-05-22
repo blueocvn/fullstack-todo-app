@@ -35,7 +35,7 @@ class TaskService:
     db_task = db.query(Task).filter(Task.id == task_id)
     current_task = db_task.first()
 
-    if current_task is None:
+    if not current_task :
       raise HTTPException(status_code=404,detail="Task not found")
    
     current_task.name = task.name,
@@ -47,3 +47,13 @@ class TaskService:
     db.add(current_task)
     db.commit()
     return {"status" : 200,"message" : "Update task success"}
+
+  def delete_task(task_id : int,db: Session):
+    db_task = db.query(Task).filter(Task.id == task_id).first()
+
+    if not db_task:
+      raise HTTPException(status_code=404,detail="Task not found")
+ 
+    db.delete(db_task)
+    db.commit()
+    return {"status" : 200,"message": "Delete task success"}
