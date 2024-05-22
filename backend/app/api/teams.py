@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.models.account import Account
 from app.models.teams import Team
 from app.models.user_team import User_team
+from app.models.tasks import Task
 import app.schemas.teams as teamSchema
 import app.services.auth as AuthServices
 from app.core.database import get_db
@@ -86,3 +87,13 @@ def updateTeam(team: teamSchema.Team, db: Session = Depends(get_db)):
     db.query(Team).filter(Team.id == team.id).update({Team.name: team.name})
     db.commit()
     return JSONResponse(status_code=status.HTTP_200_OK, content={"message": "Update team successfully"})
+
+@team_router.delete("/delete")
+def deleteTeam(teamID: int, db: Session = Depends(get_db)):
+    listUser_Team = db.query(User_team).filter(User_team.team_id == teamID).delete()
+    listTask = db.query(Task).filter(Task.team_id == teamID).delete()
+    listTeam = db.query(Team).filter(Team.id == teamID).delete()
+
+    db.commit()
+
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"message": "Delete team successfully"})
