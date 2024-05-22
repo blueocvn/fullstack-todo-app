@@ -27,3 +27,7 @@ def create_tasks(task : TaskCreate,token: str = Depends(oauth2_scheme), db : Ses
 @task_router.put("/{id}")
 def edit_task(id : int,task : TaskEdit,db : Session = Depends(get_db)):
   return TaskService.edit_task(db=db,task=task,task_id=id) 
+
+@task_router.delete("/{id}")
+def delete_task(id: int,db : Session = Depends(get_db)):
+  return TaskService.delete_task(task_id=id,db=db)
