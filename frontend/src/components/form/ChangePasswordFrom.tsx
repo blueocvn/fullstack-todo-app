@@ -67,7 +67,7 @@ const ChangePasswordForm: React.FC = () => {
                 {success && <div className="text-green-500 mb-4">{success}</div>}
                 <div>
                     <div className="mb-2 block">
-                        <Label htmlFor="current_password" value="Current Password" />
+                        <Label htmlFor="current_password" value="Mật khẩu cũ" />
                     </div>
                     <TextInput
                         id="current_password"
@@ -80,7 +80,7 @@ const ChangePasswordForm: React.FC = () => {
                 </div>
                 <div>
                     <div className="mb-2 block">
-                        <Label htmlFor="new_password" value="New Password" />
+                        <Label htmlFor="new_password" value="Nhập mật khẩu mới" />
                     </div>
                     <TextInput
                         id="new_password"
@@ -94,7 +94,7 @@ const ChangePasswordForm: React.FC = () => {
                 </div>
                 <div>
                     <div className="mb-2 block">
-                        <Label htmlFor="confirmPassword" value="Confirm New Password" />
+                        <Label htmlFor="confirmPassword" value="Nhập lại mật khẩu mới" />
                     </div>
                     <TextInput
                         id="confirmPassword"
@@ -105,7 +105,7 @@ const ChangePasswordForm: React.FC = () => {
                         required
                     />
                 </div>
-                <Button type="submit" className='mt-5'>Change Password</Button>
+                <Button type="submit" className='mt-5'>Đổi</Button>
             </form>
         </Card>
     );
