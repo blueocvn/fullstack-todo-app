@@ -17,7 +17,7 @@ class TaskResponse(BaseModel):
 
 class TaskCreate(BaseModel):
   name : str
-  status : str = 0
+  status : int = 0
   description : Optional[str] = None
   team_id : int
-  user_id : Optional[int] = None
+  dueDate : str
