@@ -21,3 +21,10 @@ class TaskCreate(BaseModel):
   description : Optional[str] = None
   team_id : int
   dueDate : str
+
+class TaskEdit(BaseModel):
+  name : str
+  description : str
+  team_id : int
+  status : int
+  dueDate : str
