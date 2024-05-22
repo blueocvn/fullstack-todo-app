@@ -10,7 +10,9 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
   return (
     <Card>
       <Link to={'/create'}>
-        <Button className="w-fit">Tạo task</Button>
+        <Button className="w-fit" color="blue">
+          Tạo task
+        </Button>
       </Link>
       <Table striped>
         <Table.Head>

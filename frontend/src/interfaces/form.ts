@@ -12,7 +12,7 @@ export interface LoginFormValues {
 
 export interface TaskAddFormValues {
   name: string;
-  due_date: string;
+  dueDate: string;
   description: string;
-  status: boolean;
+  status: string;
 }
