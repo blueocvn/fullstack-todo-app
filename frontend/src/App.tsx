@@ -16,9 +16,9 @@ const ChangePassword = lazy(() => import('./features/auth/ChangePassword'));
 const NotFound = lazy(() => import('./components/NotFound'));
 
 function App() {
-    axios.defaults.baseURL = 'http://localhost:8000';
-    axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-    return (
+  axios.defaults.baseURL = 'http://localhost:8000';
+  axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+  return (
     <>
       <ToastContainer hideProgressBar />
       <Routes>
@@ -26,8 +26,15 @@ function App() {
         <Route path={ROUTE.AUTH.LOGIN} element={<Login />} />
         <Route path={ROUTE.AUTH.FOGOTPASSWORD} element={<ForgotPassword />} />
         <Route path={ROUTE.AUTH.CHANGEPASSWORD} element={<ChangePassword />} />
-        <Route path={ROUTE.ROOT} element={<ProtectedRoute><PrivateOutlet /></ProtectedRoute>}>
-          <Route index element={<TaskList />} />
+        <Route
+          path={ROUTE.ROOT}
+          element={
+            <ProtectedRoute>
+              <PrivateOutlet />
+            </ProtectedRoute>
+          }
+        >
+          <Route index path={ROUTE.TASK.ROOT} element={<TaskList />} />
           <Route path={ROUTE.TASK.CREATE} element={<TaskAdd />} />
           <Route path={ROUTE.USER.PROFILE} element={<Profile />} />
         </Route>

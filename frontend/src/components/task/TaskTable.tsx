@@ -1,6 +1,7 @@
 import { Badge, Button, Card, Table } from 'flowbite-react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Task } from '../../interfaces/task';
+import TaskEditModal from '../modal/TaskEditModal';
 interface TaskTableProps {
   tasks: Task[] | undefined;
 }
@@ -31,13 +32,8 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
                 <Table.Cell>
                   <Badge color="success">{task.status}</Badge>
                 </Table.Cell>
-                <Table.Cell className="flex gap-5">
-                  <NavLink
-                    to={`/task/${task.id}`}
-                    className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-                  >
-                    <Button>Sửa</Button>
-                  </NavLink>
+                <Table.Cell className="flex gap-1">
+                  <TaskEditModal />
                   <Button className="bg-red-500">Xóa</Button>
                 </Table.Cell>
               </Table.Row>
