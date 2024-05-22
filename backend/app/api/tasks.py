@@ -6,16 +6,16 @@ from app.services.tasks import TaskService
 from app.core.database import get_db
 from app.schemas.auth import TokenData
 from app.services.auth import get_user, get_account_by_email
-import jwt
+from app.schemas.tasks import TaskCreate
 
 task_router = APIRouter(prefix="/api/tasks",tags=["Tasks"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-@task_router.get("/",response_model=TaskResponse)
+@task_router.get("/")
 def get_tasks(db : Session = Depends(get_db)):
   return TaskService.get_tasks(db=db)
 
 # Creating new task
-@task_router.post("/",response_model=TaskResponse)
-def create_tasks(token: str = Depends(oauth2_scheme), db : Session = Depends(get_db)):
-    return 
+@task_router.post("/")
+def create_tasks(task : TaskCreate,token: str = Depends(oauth2_scheme), db : Session = Depends(get_db) ):
+    return TaskService.create_task(task=task,db=db,token=token)

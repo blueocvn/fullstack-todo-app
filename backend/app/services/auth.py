@@ -50,9 +50,10 @@ def decode_jwt(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
+        user_id : int = payload.get("id")
         if email is None:
             raise credentials_exception
-        token_data = TokenData(email=email)
+        token_data = TokenData(email=email,id=user_id)
     except jwt.PyJWTError:
         raise credentials_exception    
     return token_data

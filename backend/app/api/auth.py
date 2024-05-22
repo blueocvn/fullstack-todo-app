@@ -67,11 +67,12 @@ def login_for_access_token(db: Session = Depends(get_db), form_data: OAuth2Passw
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = AuthServices.create_access_token(
-        data={"sub": account.email}, expires_delta=access_token_expires
+        data={"sub": account.email,"id" : account.user_id}
+        , expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
-@router.get("/accounts/me", response_model=AccountResponse)
+@router.get("/accounts/me")
 async def read_accounts_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     token_data = AuthServices.decode_jwt(token)
     user = AuthServices.get_user(db, token_data.email)
