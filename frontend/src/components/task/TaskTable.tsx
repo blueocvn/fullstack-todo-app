@@ -1,12 +1,12 @@
 import { Badge, Button, Card, Table } from 'flowbite-react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Task } from '../../interfaces/task';
-
+import TaskEditModal from '../modal/TaskEditModal';
 interface TaskTableProps {
-  task: Task;
+  tasks: Task[] | undefined;
 }
 
-const TaskTable = ({ task }: TaskTableProps) => {
+const TaskTable = ({ tasks }: TaskTableProps) => {
   return (
     <Card>
       <Link to={'/create'}>
@@ -21,22 +21,24 @@ const TaskTable = ({ task }: TaskTableProps) => {
           <Table.HeadCell>Thao tác</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-            {task && 
-                <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell className="font-medium text-gray-900 whitespace-nowrap dark:text-white">{task.name}</Table.Cell>
-                    <Table.Cell>{task.description}</Table.Cell>
-                    <Table.Cell>{task.due_date}</Table.Cell>
-                    <Table.Cell>
-                    <Badge color="success">{task.status}</Badge>
-                    </Table.Cell>
-                    <Table.Cell className="flex gap-5">
-                    <NavLink to={`/task/${task.id}`} className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
-                        <Button>Sửa</Button>
-                    </NavLink>
-                    <Button className="bg-red-500">Xóa</Button>
-                    </Table.Cell>
-                </Table.Row>
-            }
+          {tasks?.map((task: Task) => {
+            return (
+              <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={task.id}>
+                <Table.Cell className="font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  {task.name}
+                </Table.Cell>
+                <Table.Cell>{task.description}</Table.Cell>
+                <Table.Cell>{task.dueDate}</Table.Cell>
+                <Table.Cell>
+                  <Badge color="success">{task.status}</Badge>
+                </Table.Cell>
+                <Table.Cell className="flex gap-1">
+                  <TaskEditModal />
+                  <Button className="bg-red-500">Xóa</Button>
+                </Table.Cell>
+              </Table.Row>
+            );
+          })}
         </Table.Body>
       </Table>
     </Card>

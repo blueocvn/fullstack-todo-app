@@ -1,33 +1,28 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from app.models.tasks import Task
-from app.schemas.tasks import Task as schemaTask
-
-from app.core.config import settings
-
-SECRET_KEY = settings.SECRET_KEY
-ALGORITHM = settings.ALGORITHM
-ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
-
-credentials_exception = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="Could not validate credentials",
-    headers={"WWW-Authenticate": "Bearer"},
-)
-
+from app.schemas.tasks import TaskCreate
+import app.services.auth as AuthService
+from datetime import datetime
 class TaskService:
-    def get_tasks(db: Session):
-        tasks = db.query(Task).all()
-        return {"status": 200, "data": tasks}
-
-    def create_new_task(task: schemaTask, token: str, db : Session):
-        newTask = Task(
-            name = task.name,
-            status = task.status,
-            
-        )
-
-        db.add(task)
-        db.commit()
-        db.refresh(task)
-        return
+  def get_tasks(db : Session):
+    tasks = db.query(Task).all()
+    return { "status"  : 200,"data" : tasks} 
+  
+  def create_task(db : Session,task : TaskCreate,token : str):
+    token = AuthService.decode_jwt(token)
+    user_id = token.id
+    db_task = Task(
+        name = task.name,
+        user_id = user_id,
+        team_id = task.team_id,
+        description = task.description,
+        dueDate = task.dueDate ,
+        status = task.status,
+        createAt = datetime.now(),
+        updateAt = datetime.now()
+    )
+    db.add(db_task)
+    db.commit()
+    db.refresh(db_task)
+    return { "status" : 200,"message" : "Create task success"}

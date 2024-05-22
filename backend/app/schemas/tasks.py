@@ -13,3 +13,10 @@ class Task(BaseModel):
 class TaskResponse(BaseModel):
   status : int 
   data : list[Task]
+
+class TaskCreate(BaseModel):
+  name : str
+  status : int = 0
+  description : Optional[str] = None
+  team_id : int
+  dueDate : str
