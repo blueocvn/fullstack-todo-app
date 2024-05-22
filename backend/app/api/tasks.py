@@ -1,7 +1,7 @@
 from fastapi import APIRouter,Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from app.schemas.tasks import TaskResponse
+from app.schemas.tasks import TaskResponse, Task
 from app.services.tasks import TaskService
 from app.core.database import get_db
 from app.schemas.auth import TokenData
@@ -16,6 +16,6 @@ def get_tasks(db : Session = Depends(get_db)):
   return TaskService.get_tasks(db=db)
 
 # Creating new task
-@task_router.post("/",response_model=TaskResponse)
-def create_tasks(token: str = Depends(oauth2_scheme), db : Session = Depends(get_db)):
+@task_router.post("/")
+def create_tasks(task: Task, token: str = Depends(oauth2_scheme), db : Session = Depends(get_db)):
     return 

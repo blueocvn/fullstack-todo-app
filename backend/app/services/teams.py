@@ -15,19 +15,3 @@ credentials_exception = HTTPException(
     headers={"WWW-Authenticate": "Bearer"},
 )
 
-class TaskService:
-    def get_tasks(db: Session):
-        tasks = db.query(Task).all()
-        return {"status": 200, "data": tasks}
-
-    def create_new_task(task: schemaTask, token: str, db : Session):
-        newTask = Task(
-            name = task.name,
-            status = task.status,
-            
-        )
-
-        db.add(task)
-        db.commit()
-        db.refresh(task)
-        return

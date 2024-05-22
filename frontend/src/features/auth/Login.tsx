@@ -34,7 +34,7 @@ const Login = () => {
   };
 
   if (token) {
-    return <Navigate to="/task" />;
+    return <Navigate to="/" />;
   } else {
     return <LoginForm onLogin={handleLogin} />;
   }

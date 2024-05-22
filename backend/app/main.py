@@ -3,6 +3,7 @@ from app.api.tasks import task_router as TaskRouter
 from fastapi import FastAPI, Request, Response
 from app.api.auth import router as AuthRouter
 from app.api.users import user_router as UserRouter
+from app.api.teams import team_router as TeamRouter
 from app.core.database import engine, Base, SessionLocal
 
 def create_application():
@@ -10,6 +11,7 @@ def create_application():
     application.include_router(TaskRouter)
     application.include_router(AuthRouter)
     application.include_router(UserRouter)
+    application.include_router(TeamRouter)
     return application
 
 app = create_application()
