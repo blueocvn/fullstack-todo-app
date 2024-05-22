@@ -4,7 +4,7 @@ from pydantic import BaseModel
 class Task(BaseModel):
   id : Optional[int]
   name : str
-  status : int
+  status : str
   team_id : int
   user_id : int
   createAt : str
@@ -16,14 +16,16 @@ class TaskResponse(BaseModel):
 
 class TaskCreate(BaseModel):
   name : str
-  status : int = 0
+  status : str 
   description : Optional[str] = None
-  team_id : int
+  team_id : Optional[int] = None
   dueDate : str
 
 class TaskEdit(BaseModel):
   name : str
   description : str
   team_id : int
-  status : int
+  status : str
   dueDate : str
+
+

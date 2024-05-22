@@ -26,6 +26,12 @@ credentials_exception = HTTPException(
     headers={"WWW-Authenticate": "Bearer"},
 )
 
+PyJWT_exception = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="PyJWT error",
+    headers={"WWW-Authenticate": "Bearer"},
+)
+
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
@@ -55,7 +61,7 @@ def decode_jwt(token: str = Depends(oauth2_scheme)):
             raise credentials_exception
         token_data = TokenData(email=email,id=user_id)
     except jwt.PyJWTError:
-        raise credentials_exception    
+        raise PyJWT_exception    
     return token_data
 
 def get_user(db: Session, email: str):
