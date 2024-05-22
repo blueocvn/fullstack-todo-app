@@ -11,10 +11,15 @@ const userDropdownLinks = [
   {
     id: 1,
     label: 'Xem thông tin',
-    path: `/user/:id`,
+    path: `/profile`,
   },
   {
     id: 2,
+    label: 'Đổi mật khẩu',
+    path: `/changepassword`
+  },
+  {
+    id: 3,
     label: 'Đăng xuất',
   },
 ];
