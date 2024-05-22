@@ -1,6 +1,7 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from app.models.tasks import Task
-from app.schemas.tasks import TaskCreate
+from app.schemas.tasks import TaskCreate,TaskEdit
 import app.services.auth as AuthService
 from datetime import datetime
 class TaskService:
@@ -29,3 +30,20 @@ class TaskService:
     db.commit()
     db.refresh(db_task)
     return { "status" : 200,"message" : "Create task success"}
+
+  def edit_task(db : Session,task : TaskEdit,task_id : int):
+    db_task = db.query(Task).filter(Task.id == task_id)
+    current_task = db_task.first()
+
+    if current_task is None:
+      raise HTTPException(status_code=404,detail="Task not found")
+   
+    current_task.name = task.name,
+    current_task.description = task.description,
+    current_task.dueDate = task.dueDate,
+    current_task.status = task.status,
+    updateAt = datetime.now()
+
+    db.add(current_task)
+    db.commit()
+    return {"status" : 200,"message" : "Update task success"}
