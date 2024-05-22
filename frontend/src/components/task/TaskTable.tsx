@@ -2,11 +2,14 @@ import { Badge, Button, Card, Table } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 import { Task } from '../../interfaces/task';
 import TaskEditModal from '../modal/TaskEditModal';
+import { statusColor } from '../../utils/ultil';
+import dayjs from 'dayjs';
 interface TaskTableProps {
   tasks: Task[] | undefined;
+  onDeleteTask: (id: number) => void;
 }
 
-const TaskTable = ({ tasks }: TaskTableProps) => {
+const TaskTable = ({ tasks, onDeleteTask }: TaskTableProps) => {
   return (
     <Card>
       <Link to={'/create'}>
@@ -30,13 +33,15 @@ const TaskTable = ({ tasks }: TaskTableProps) => {
                   {task.name}
                 </Table.Cell>
                 <Table.Cell>{task.description}</Table.Cell>
-                <Table.Cell>{task.dueDate}</Table.Cell>
+                <Table.Cell>{dayjs(task.dueDate).format('DD/MM/YYYY')}</Table.Cell>
                 <Table.Cell>
-                  <Badge color="success">{task.status}</Badge>
+                  <Badge color={statusColor(task.status)}>{task.status}</Badge>
                 </Table.Cell>
                 <Table.Cell className="flex gap-1">
                   <TaskEditModal />
-                  <Button className="bg-red-500">Xóa</Button>
+                  <Button className="bg-red-500" onClick={() => onDeleteTask(task.id)}>
+                    Xóa
+                  </Button>
                 </Table.Cell>
               </Table.Row>
             );

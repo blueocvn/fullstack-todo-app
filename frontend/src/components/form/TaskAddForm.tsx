@@ -73,7 +73,7 @@ const TaskAddForm = ({ onCreateTask, loading }: TaskAddFormProps) => {
               <Datepicker
                 placeholder="Ngày hết hạn"
                 language="vi-VN"
-                onSelectedDateChanged={(date) => field.onChange(dayjs(date).format('DD/MM/YYYY'))}
+                onSelectedDateChanged={(date) => field.onChange(dayjs(date).format('MM/DD/YYYY'))}
                 value={field.value}
               />
             )}

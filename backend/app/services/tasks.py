@@ -5,8 +5,10 @@ from app.schemas.tasks import TaskCreate,TaskEdit
 import app.services.auth as AuthService
 from datetime import datetime
 class TaskService:
-  def get_tasks(db : Session):
-    tasks = db.query(Task).all()
+  def get_tasks(db : Session, token : str):
+    token = AuthService.decode_jwt(token)
+    user_id = token.id
+    tasks = db.query(Task).filter(Task.user_id == user_id).all()
     return { "status"  : 200,"data" : tasks} 
   
   def get_task(db : Session,task_id : int):

@@ -81,7 +81,6 @@ const TaskEditModal = () => {
           </div>
         </Modal.Body>
       </Modal>
-      ;
     </>
   );
 };

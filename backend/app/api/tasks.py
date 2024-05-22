@@ -12,8 +12,8 @@ task_router = APIRouter(prefix="/api/tasks",tags=["Tasks"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @task_router.get("/")
-def get_tasks(db : Session = Depends(get_db)):
-  return TaskService.get_tasks(db=db)
+def get_tasks(db : Session = Depends(get_db),token: str = Depends(oauth2_scheme) ):
+  return TaskService.get_tasks(db=db,token = token)
 
 @task_router.get("/{id}")
 def get_tasks(id : int,db: Session = Depends(get_db)):

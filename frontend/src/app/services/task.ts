@@ -7,6 +7,7 @@ const taskApi = api.injectEndpoints({
   endpoints: (build) => ({
     getTasks: build.query<TaskResponse, void>({
       query: () => '/tasks/',
+      providesTags: ['Task'],
     }),
     createTask: build.mutation<Response, TaskAddFormValues>({
       query: (task) => ({
@@ -16,7 +17,14 @@ const taskApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Task'],
     }),
+    deleteTask: build.mutation<void, number>({
+      query: (id) => ({
+        method: 'DELETE',
+        url: `/tasks/${id}`,
+      }),
+      invalidatesTags: ['Task'],
+    }),
   }),
 });
 
-export const { useGetTasksQuery, useCreateTaskMutation } = taskApi;
+export const { useGetTasksQuery, useCreateTaskMutation, useDeleteTaskMutation } = taskApi;

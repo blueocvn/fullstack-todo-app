@@ -1,7 +1,7 @@
 import { Dropdown } from 'flowbite-react';
 import { User } from '../../interfaces/user';
 import { DropdownLink } from '../../interfaces/route';
-import { Link, redirect } from 'react-router-dom';
+import { Link, redirect, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
@@ -19,7 +19,7 @@ const userDropdownLinks = [
   {
     id: 2,
     label: 'Đổi mật khẩu',
-    path: `/changepassword`
+    path: `/changepassword`,
   },
   {
     id: 3,
@@ -28,21 +28,22 @@ const userDropdownLinks = [
 ];
 
 const UserDropdown = () => {
-    const token = Cookies.get('token');
-    const removeToken = () => {
-        Cookies.remove('token');
-        return redirect("/login");
-    }
-    const config = {
-        headers: { Authorization: `Bearer ${token}` },
-    };
-    const [data, setData] = useState();
+  const token = Cookies.get('token');
+  const navigate = useNavigate();
+  const removeToken = () => {
+    Cookies.remove('token');
+    navigate('/login');
+  };
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  const [data, setData] = useState();
 
-    useEffect(() => {
-        axios.get('/accounts/me', config).then((res) => {
-            setData(res.data);
-        });
-    }, []);
+  useEffect(() => {
+    axios.get('/accounts/me', config).then((res) => {
+      setData(res.data);
+    });
+  }, []);
 
   return (
     <div>
@@ -53,7 +54,9 @@ const UserDropdown = () => {
               <Dropdown.Item key={link.id}>{link.label}</Dropdown.Item>
             </Link>
           ) : (
-            <Dropdown.Item key={link.id} onClick={removeToken}>{link.label}</Dropdown.Item>
+            <Dropdown.Item key={link.id} onClick={removeToken}>
+              {link.label}
+            </Dropdown.Item>
           );
         })}
       </Dropdown>
