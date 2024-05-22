@@ -20,7 +20,7 @@ function App() {
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
   return (
     <>
-      <ToastContainer hideProgressBar />
+      <ToastContainer hideProgressBar theme="colored" autoClose={2000} />
       <Routes>
         <Route path={ROUTE.AUTH.REGISTER} element={<Register />} />
         <Route path={ROUTE.AUTH.LOGIN} element={<Login />} />

@@ -1,21 +1,26 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Card, Datepicker, Label, TextInput, ToggleSwitch } from 'flowbite-react';
+import { Button, Card, Datepicker, Label, Select, Spinner, TextInput } from 'flowbite-react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import { TaskAddFormValues } from '../../interfaces/form';
 import dayjs from 'dayjs';
 
+interface TaskAddFormProps {
+  onCreateTask: (task: TaskAddFormValues) => void;
+  loading: boolean;
+}
+
 const taskAddSchema = yup
   .object({
     name: yup.string().required('Vui lòng nhập tên'),
     description: yup.string().required('Vui lòng nhập mô tả'),
-    due_date: yup.string().required('Vui lòng chọn chọn ngày hết hạn'),
-    status: yup.boolean().required('Vui lòng chọn trạng thái'),
+    dueDate: yup.string().required('Vui lòng chọn chọn ngày hết hạn'),
+    status: yup.string().required('Vui lòng chọn trạng thái'),
   })
   .required();
 
-const TaskAddForm = () => {
+const TaskAddForm = ({ onCreateTask, loading }: TaskAddFormProps) => {
   const {
     register,
     handleSubmit,
@@ -25,13 +30,13 @@ const TaskAddForm = () => {
     defaultValues: {
       name: '',
       description: '',
-      due_date: '',
-      status: false,
+      dueDate: '',
+      status: 'pending',
     },
     resolver: yupResolver(taskAddSchema),
   });
   const onSubmit: SubmitHandler<TaskAddFormValues> = (data) => {
-    console.log(data);
+    onCreateTask(data);
   };
 
   return (
@@ -41,20 +46,29 @@ const TaskAddForm = () => {
         <div>
           <div className="block mb-2">
             <Label htmlFor="name" value="Tên" />
-            <TextInput type="text" placeholder="Tên" {...register('name')} color={errors.name ? 'failure' : ''} />
+            <TextInput type="text" placeholder="Tên" {...register('name')} color={errors.name ? 'failure' : 'gray'} />
           </div>
           <p className="text-red-500">{errors.name?.message}</p>
         </div>
         <div className="block mb-2">
           <Label value="Mô tả" />
-          <TextInput placeholder="Mô tả" {...register('description')} color={errors.description ? 'failure' : ''} />
+          <TextInput placeholder="Mô tả" {...register('description')} color={errors.description ? 'failure' : 'gray'} />
           <p className="text-red-500">{errors.description?.message}</p>
+        </div>
+        <div className="block mb-2">
+          <Label value="Trạng thái" />
+          <Select {...register('status')} color={errors.description ? 'failure' : 'gray'}>
+            <option value="Đang xử lý">Đang làm</option>
+            <option value="Thành công">Thành công</option>
+            <option value="Hủy bỏ">Hủy bỏ</option>
+            <option value="Thất bại">Thất bại</option>
+          </Select>
         </div>
         <div className="block mb-2">
           <Label value="Ngày hết hạn" />
           <Controller
             control={control}
-            name="due_date"
+            name="dueDate"
             render={({ field }) => (
               <Datepicker
                 placeholder="Ngày hết hạn"
@@ -64,20 +78,11 @@ const TaskAddForm = () => {
               />
             )}
           />
-          <p className="text-red-500">{errors.due_date?.message}</p>
-        </div>
-        <div className="block mb-2">
-          <Controller
-            control={control}
-            name="status"
-            render={({ field }) => (
-              <ToggleSwitch label="Đã hoàn thành" checked={field.value} onChange={(status) => field.onChange(status)} />
-            )}
-          />
+          <p className="text-red-500">{errors.dueDate?.message}</p>
         </div>
         <div className="flex gap-3">
           <Button type="submit" color="blue">
-            Tạo task
+            {loading ? <Spinner /> : 'Tạo task'}
           </Button>
           <Link to={'/'}>
             <Button color="light">Hủy</Button>
