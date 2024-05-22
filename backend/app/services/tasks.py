@@ -8,6 +8,10 @@ class TaskService:
     tasks = db.query(Task).all()
     return { "status"  : 200,"data" : tasks} 
   
+  def get_task(db : Session,task_id : int):
+    task = db.query(Task).filter(Task.id == task_id).first()
+    return {"status" : 200,"data" : task}
+    
   def create_task(db : Session,task : TaskCreate,token : str):
     token = AuthService.decode_jwt(token)
     user_id = token.id
