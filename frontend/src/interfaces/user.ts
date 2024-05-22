@@ -14,3 +14,7 @@ export interface UserUpdated {
   phone: string;
   address: string;
 }
+export interface AccountUpdated {
+    current_password: string;
+    new_password: string;
+  }
