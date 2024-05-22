@@ -73,6 +73,10 @@ export const api = createApi({
       query: ({ team_id, body }) => ({ method: 'POST', url: `api/teams/${team_id}/add`, body }),
     }),
 
+    removeMember: builder.mutation<any, { team_id: string, body: { member_id: string } }>({
+      query: ({ team_id, body }) => ({ method: 'DELETE', url: `api/teams/${team_id}/remove`, body }),
+    }),
+
     getAllTeamByUser: builder.query<TeamModel[], void>({
       query: () => 'api/teams',
     }),
@@ -116,6 +120,7 @@ export const {
   // team
   useCreateNewTeamMutation,
   useAddNewMemberMutation,
+  useRemoveMemberMutation,
   useGetAllTeamByUserQuery,
   useGetTeamDetailQuery,
   useGetTasksByTeamQuery,

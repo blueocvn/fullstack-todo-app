@@ -3,7 +3,7 @@ from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from uuid import UUID
 
-from app.schemas.team import CreateTeam, AddMember
+from app.schemas.team import CreateTeam, AddMember, RemoveMember
 from app.models import UserModel, TeamModel, TaskModel
 
 class TeamService:
@@ -123,8 +123,6 @@ class TeamService:
     @staticmethod
     def add_team_member(db:Session, team_id:UUID, payload:AddMember, user:dict):
         try:
-            print('1111:', team_id)
-            print('22222222:', payload.email)
             user_id = user.get('id')
 
             found_team = db.query(TeamModel).filter(
@@ -143,6 +141,39 @@ class TeamService:
                 return JSONResponse(content="this member has already existed in this team", status_code=404)
             
             found_team.members.append(found_member)
+
+            db.commit()
+            db.refresh(found_team)
+
+            found_team.leader_name = found_team.leader.username
+
+            return found_team
+        except Exception as e:
+            print(e)
+            db.rollback()
+            raise HTTPException(status_code=500, detail='Internal server error')
+        
+    @staticmethod
+    def remove_team_member(db:Session, team_id:UUID, payload:RemoveMember, user:dict):
+        try:
+            user_id = user.get('id')
+
+            found_team = db.query(TeamModel).filter(
+                TeamModel.id == team_id,
+                TeamModel.leader_id == user_id
+            ).first()
+
+            if found_team is None:
+                return JSONResponse(content="team not found", status_code=404)
+            
+            found_member = db.query(UserModel).filter(UserModel.id == payload.member_id).first()
+            if found_member is None:
+                return JSONResponse(content="member not found", status_code=404)
+            
+            if not any(member.id == found_member.id for member in found_team.members):
+                return JSONResponse(content="this member does not existed in this team", status_code=404)
+            
+            found_team.members.remove(found_member)
 
             db.commit()
             db.refresh(found_team)

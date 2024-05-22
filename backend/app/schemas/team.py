@@ -17,3 +17,6 @@ class CreateTeam(BaseModel):
 
 class AddMember(BaseModel):
     email:EmailStr
+
+class RemoveMember(BaseModel):
+    member_id:UUID

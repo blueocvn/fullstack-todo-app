@@ -26,6 +26,10 @@ import { getTokens } from '../../utils/storage';
 import { enqueueSnackbar } from 'notistack';
 import AddTaskModal from '../../components/team/AddTaskModal';
 import DeleteTeamModal from '../../components/team/deleteTeamModal';
+import { FaRegTrashCan } from 'react-icons/fa6';
+
+import DeleteTeamTaskModal from '../../components/team/deleteTeamTaskModal';
+import DeleteTeamMemberModal from '../../components/team/deleteTeamMember';
 
 export const TeamDetailPage = () => {
   const params = useParams<{ teamId: string }>();
@@ -154,6 +158,7 @@ export const TeamDetailPage = () => {
             <TableHeadCell>Todo</TableHeadCell>
             <TableHeadCell>Assignee</TableHeadCell>
             <TableHeadCell>status</TableHeadCell>
+            {isLeader && <TableHeadCell></TableHeadCell>}
           </TableHead>
 
           <TableBody className="divide-y text-black">
@@ -177,6 +182,11 @@ export const TeamDetailPage = () => {
                 >
                   {task?.status}
                 </TableCell>
+                {isLeader && (
+                  <Table.Cell>
+                    <DeleteTeamTaskModal task_id={task?.id} team_id={String(teamId)} />
+                  </Table.Cell>
+                )}
               </TableRow>
             ))}
           </TableBody>
@@ -184,13 +194,20 @@ export const TeamDetailPage = () => {
       </div>
 
       <div className="col-span-3">
-        <ListGroup className="w-full col-span-1">
-          {members?.map((member) => (
-            <ListGroupItem key={member?.id}>
-              <p className="w-full flex justify-center gap-5">{member?.username}</p>
-            </ListGroupItem>
-          ))}
-        </ListGroup>
+        <Table>
+          <TableBody className="divide-y text-black">
+            {members?.map((member) => (
+              <TableRow key={member?.id}>
+                <TableCell align={!isLeader ? 'center' : 'left'}>{member?.username}</TableCell>
+                {isLeader && (
+                  <TableCell align="right">
+                    <DeleteTeamMemberModal team_id={String(teamId)} member_id={member?.id} />
+                  </TableCell>
+                )}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
 
       <div className="col-span-7">{isLeader && <DeleteTeamModal team_id={team?.id as string} />}</div>

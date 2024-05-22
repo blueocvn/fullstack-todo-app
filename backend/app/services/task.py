@@ -108,7 +108,7 @@ class TaskService:
 
             found_task = db.query(TaskModel).filter(
                     TaskModel.id == task_id,
-                    TaskModel.owner_id == user_id
+                    TaskModel.assignee_id == user_id
                 ).first()
             if found_task is None:
                 return JSONResponse(content="task not found", status_code=404)
